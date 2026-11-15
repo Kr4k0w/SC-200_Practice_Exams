@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Microsoft SC-200 Exam Simulator</title>
+<style>
+:root{--blue:#1b365d;--blue2:#004578;--accent:#0f6cbd;--bg:#f3f5f8;--card:#fff;--line:#d0d7e0;--txt:#1f2933;--mut:#5f6b7a;--ok:#107c41;--bad:#c42b1c;--flag:#e8a200}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--txt);line-height:1.5}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #7fb4e8;outline-offset:2px}
+.hidden{display:none!important}
+header.top{background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 20px;position:sticky;top:0;z-index:10}
+.top h1{font-size:16px;font-weight:600;margin:0}
+.top .meta{display:flex;gap:22px;align-items:center;font-size:14px}
+.timer{font-variant-numeric:tabular-nums;font-weight:600;font-size:17px;background:rgba(255,255,255,.14);padding:3px 12px;border-radius:3px}
+.timer.low{background:var(--bad)}
+.toolbar{background:#fff;border-bottom:1px solid var(--line);padding:8px 20px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar .sp{flex:1}
+.btn{border:1px solid var(--accent);background:#fff;color:var(--accent);padding:7px 16px;border-radius:3px;font-weight:600;font-size:14px}
+.btn:hover:not(:disabled){background:#e8f1fa}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.pri{background:var(--accent);color:#fff}.btn.pri:hover:not(:disabled){background:#0b5a9e}
+.btn.danger{border-color:var(--bad);color:var(--bad)}.btn.danger:hover{background:#fdecea}
+.btn.flag.on{background:var(--flag);border-color:var(--flag);color:#1f2933}
+main{max-width:980px;margin:0 auto;padding:24px 20px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:24px}
+.qhead{display:flex;justify-content:space-between;color:var(--mut);font-size:13px;margin-bottom:14px}
+.qtext{font-size:17px;margin:0 0 14px;white-space:pre-wrap}
+.hint{font-style:italic;color:var(--blue2);margin:0 0 14px;font-size:14px}
+pre.code{background:#1e2530;color:#e6edf3;padding:14px 16px;border-radius:4px;overflow-x:auto;font:13px/1.55 Consolas,"Courier New",monospace;margin:0 0 16px;tab-size:2}
+pre.code .k{color:#79c0ff}pre.code .s{color:#a5d6a7}pre.code .c{color:#8b98a9}
+.codelang{font-size:12px;color:var(--mut);margin:0 0 4px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:3px;padding:11px 14px;margin-bottom:8px;cursor:pointer;background:#fff}
+.opt:hover{background:#f4f8fc}
+.opt.sel{border-color:var(--accent);background:#e8f1fa}
+.opt input{margin-top:5px;accent-color:var(--accent)}
+.opt .l{font-weight:600;min-width:18px}
+/* lobby */
+.lobby h2{margin:0 0 4px}.lobby p.sub{color:var(--mut);margin:0 0 22px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.ex{background:#fff;border:1px solid var(--line);border-left:5px solid var(--accent);padding:16px;border-radius:3px;display:flex;flex-direction:column;gap:6px}
+.ex h3{margin:0;font-size:16px}.ex small{color:var(--mut)}.ex .btn{margin-top:auto;align-self:flex-start}
+.rules{margin-top:22px;font-size:14px;color:var(--mut)}
+/* review grid */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:8px;margin:16px 0}
+.cell{position:relative;height:44px;border:1px solid var(--line);background:#fff;border-radius:3px;font-weight:600}
+.cell.ans{background:var(--accent);border-color:var(--accent);color:#fff}
+.cell.cur{box-shadow:0 0 0 3px #7fb4e8}
+.cell.mk::after{content:"";position:absolute;top:0;right:0;border-style:solid;border-width:0 14px 14px 0;border-color:transparent var(--flag) transparent transparent}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mut)}
+.legend i{display:inline-block;width:14px;height:14px;border:1px solid var(--line);vertical-align:-2px;margin-right:6px;background:#fff}
+.legend i.a{background:var(--accent);border-color:var(--accent)}.legend i.m{background:var(--flag);border-color:var(--flag)}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal .box{background:#fff;max-width:440px;width:100%;padding:24px;border-radius:4px}
+.modal .row{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+/* report */
+.verdict{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+.score{font-size:52px;font-weight:300;line-height:1}
+.badge{font-size:22px;font-weight:700;color:#fff;padding:6px 22px;border-radius:3px}
+.badge.pass{background:var(--ok)}.badge.fail{background:var(--bad)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:10px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{background:#eef2f7}
+.bar{height:10px;background:#e3e8ee;border-radius:5px;min-width:120px;overflow:hidden}
+.bar span{display:block;height:100%;background:var(--accent)}
+.bar span.low{background:var(--bad)}.bar span.good{background:var(--ok)}
+.item{border:1px solid var(--line);border-left:5px solid var(--bad);padding:14px 16px;margin:14px 0;border-radius:3px;background:#fff;break-inside:avoid}
+.item.marked{border-left-color:var(--flag)}
+.item h4{margin:0 0 8px;font-size:14px;color:var(--mut)}
+.item .you{color:var(--bad)}.item .right{color:var(--ok)}
+.item .exp{background:#f3f5f8;padding:10px 12px;border-radius:3px;margin-top:8px;font-size:14px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;background:#e8f1fa;color:var(--blue2);margin-right:6px}
+.tag.f{background:#fff3cd;color:#7a5800}
+.tag.ok{background:#dff3e7;color:#0b5a2e}.tag.bad{background:#fbe3e0;color:#8e1f14}
+/* answer review */
+.item.ok{border-left-color:var(--ok)}
+.qmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px;margin:10px 0 4px}
+.qdot{height:36px;border-radius:3px;font-weight:600;font-size:13px;border:1px solid;background:#fff}
+.qdot.ok{background:#dff3e7;border-color:var(--ok);color:#0b5a2e}
+.qdot.bad{background:#fbe3e0;border-color:var(--bad);color:#8e1f14}
+.qdot:hover{filter:brightness(.95)}
+.qlegend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin-bottom:6px}
+.qlegend i{display:inline-block;width:14px;height:14px;border:1px solid;vertical-align:-2px;margin-right:6px}
+.qlegend i.ok{background:#dff3e7;border-color:var(--ok)}.qlegend i.bad{background:#fbe3e0;border-color:var(--bad)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 4px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:16px;padding:5px 14px;font-size:14px;font-weight:600;color:var(--txt)}
+.chip:hover{background:#f4f8fc}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.ro{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:3px;padding:8px 12px;margin-bottom:6px;font-size:14px;background:#fff}
+.ro .rm{width:16px;font-weight:700;text-align:center;flex:none}
+.ro .l{font-weight:600;min-width:18px}
+.ro em{margin-left:auto;font-size:12px;font-style:normal;font-weight:600;white-space:nowrap;padding-left:10px}
+.ro.ok{background:#e9f7ef;border-color:var(--ok)}.ro.ok .rm,.ro.ok em{color:var(--ok)}
+.ro.miss{background:#fff;border:2px dashed var(--ok)}.ro.miss .rm,.ro.miss em{color:var(--ok)}
+.ro.bad{background:#fdecea;border-color:var(--bad)}.ro.bad .rm,.ro.bad em{color:var(--bad)}
+@media(max-width:640px){.ro em{display:none}}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;padding:10px 20px;border-radius:3px;z-index:60}
+@media(max-width:640px){.top{flex-direction:column;align-items:flex-start}.top .meta{gap:12px}}
+@media print{
+ body{background:#fff}
+ .noprint,header.top,.toolbar,.toast,.modal{display:none!important}
+ main{max-width:none;padding:0}.card{border:0;padding:0}
+ pre.code{background:#f3f3f3!important;color:#000!important;border:1px solid #bbb;white-space:pre-wrap}
+ pre.code .k,pre.code .s,pre.code .c{color:#000!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .item{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="top noprint" id="topbar">
+  <h1>Microsoft SC-200: Security Operations Analyst</h1>
+  <div class="meta">
+    <span id="examName"></span>
+    <span class="hidden" id="progress"></span>
+    <span class="timer hidden" id="timer" title="Time remaining">120:00</span>
+  </div>
+</header>
+
+<div class="toolbar noprint hidden" id="toolbar">
+  <button class="btn flag" id="bMark">Mark for Review</button>
+  <button class="btn" id="bPrev">Previous</button>
+  <button class="btn" id="bNext">Next</button>
+  <span class="sp"></span>
+  <button class="btn" id="bReview">Review Screen</button>
+  <button class="btn danger" id="bEnd">End Exam</button>
+</div>
+
+<main>
+  <!-- LOBBY -->
+  <section id="lobby" class="lobby">
+    <h2>Select a practice exam</h2>
+    <p class="sub">Each simulation allows 120 minutes. Passing score: 850 / 1000 (official passing score is 700).</p>
+    <div class="grid" id="examGrid"></div>
+    <div class="card" style="margin-top:22px">
+      <h3 style="margin-top:0">Import questions (JSON)</h3>
+      <p class="sub" style="margin:0 0 12px">Load a 60-question JSON array into any exam without editing the code. Data stays in this browser tab (and in local storage when available).</p>
+      <div class="actions" style="margin:0 0 10px">
+        <select id="impExam" aria-label="Target exam" style="padding:7px;border:1px solid var(--line);border-radius:3px"></select>
+        <input type="file" id="impFile" accept=".json,application/json">
+        <button class="btn pri" id="impBtn">Load JSON</button>
+      </div>
+      <textarea id="impText" rows="4" placeholder="…or paste the JSON array here" style="width:100%;font:12px Consolas,monospace;padding:8px;border:1px solid var(--line);border-radius:3px"></textarea>
+      <p id="impMsg" style="margin:8px 0 0;font-size:14px"></p>
+    </div>
+    <div class="rules">
+      <strong>Rules:</strong> Questions marked “Select two/three” require all correct options to earn credit.
+      Score = correct answers ÷ total questions × 1000. Your progress is kept only while this tab stays open.
+    </div>
+  </section>
+
+  <!-- QUESTION -->
+  <section id="exam" class="hidden">
+    <div class="card" id="qcard"></div>
+  </section>
+
+  <!-- REVIEW SCREEN -->
+  <section id="review" class="hidden">
+    <div class="card">
+      <h2 style="margin-top:0">Review Screen</h2>
+      <div class="legend"><span><i class="a"></i>Answered</span><span><i></i>Unanswered</span><span><i class="m"></i>Marked for review</span></div>
+      <div class="rgrid" id="rgrid"></div>
+      <p id="rsum" style="color:var(--mut)"></p>
+      <div class="actions">
+        <button class="btn pri" id="rBack">Return to Exam</button>
+        <button class="btn" id="rUnans">Go to First Unanswered</button>
+        <button class="btn" id="rMarked">Go to First Marked</button>
+        <button class="btn danger" id="rEnd">End Exam</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORT -->
+  <section id="report" class="hidden"></section>
+</main>
+
+<div class="modal hidden" id="modal"><div class="box">
+  <h3 style="margin-top:0">End exam?</h3>
+  <p id="modalMsg"></p>
+  <div class="row"><button class="btn" id="mNo">Cancel</button><button class="btn pri" id="mYes">End Exam</button></div>
+</div></div>
+
+<script>
+/* =====================================================================
+   EXAM DATA
+   Paste the 60-question arrays into exam1 ... exam6 below.
+   Question schema:
+   {
+     domain: 1 | 2 | 3,          // 1 = Defender XDR, 2 = Defender for Cloud, 3 = Sentinel
+     q: "Question text",
+     code: { lang: "KQL" | "JSON" | "Syslog", text: "..." },   // optional
+     options: ["Option A", "Option B", ...],
+     answer: [1],                // zero-based indexes of correct options ([0,2] = "Select two")
+     explanation: "Detailed technical explanation"
+   }
+   Single choice when answer has 1 element; multiple response otherwise.
+   ===================================================================== */
+const EXAM_DATA = {
+  // ---- EXAM 1: Foundational & Core Concepts — paste 60 questions here ----
+  exam1: [
+    {
+      domain: 3,
+      q: "You run the following query in Microsoft Sentinel to find accounts with many failed sign-ins. Which operator should replace <MISSING> to count failures per account?",
+      code: { lang: "KQL", text: "SigninLogs\n| where TimeGenerated > ago(1d)\n| where ResultType != 0\n| <MISSING> FailedCount = count() by UserPrincipalName\n| where FailedCount > 20\n| order by FailedCount desc" },
+      options: ["extend", "summarize", "project", "mv-expand"],
+      answer: [1],
+      explanation: "The summarize operator aggregates rows; count() by UserPrincipalName groups failed sign-ins per account. extend adds calculated columns without aggregation, project only selects columns, and mv-expand expands dynamic arrays."
+    },
+    {
+      domain: 1,
+      q: "Which TWO actions can you take from the Microsoft Defender portal to contain a compromised device? (Select two)",
+      options: ["Isolate device", "Run antivirus scan", "Reset the user's MFA registration in Microsoft Entra ID only", "Restrict app execution"],
+      answer: [0, 3],
+      explanation: "Isolate device cuts the endpoint from the network (keeping Defender connectivity) and Restrict app execution allows only Microsoft-signed binaries. Both are containment response actions. A scan is remediation/investigation, and an MFA reset does not contain the device."
+    }
+  ],
+  // ---- EXAM 2: Intermediate KQL & Defender XDR — paste 60 questions here ----
+  exam2: [],
+  // ---- EXAM 3: Microsoft Sentinel Architecture & Ingestion — paste 60 questions here ----
+  exam3: [],
+  // ---- EXAM 4: Advanced Threat Hunting & Automation (SOAR) — paste 60 questions here ----
+  exam4: [],
+  // ---- EXAM 5: Complex Case Studies & Incident Response — paste 60 questions here ----
+  exam5: [],
+  // ---- EXAM 6: Master Boss Level (Exam Readiness) — paste 60 questions here ----
+  exam6: [{"id": 1, "domain": "Microsoft Sentinel", "type": "single", "question": "You are a Security Operations Analyst at Contoso Ltd. Linux servers send Syslog to a Log Analytics workspace by using the Azure Monitor Agent (AMA). More than 70% of the ingested volume is informational events from the daemon facility that you never use in detections. You must discard these events before ingestion, keep all other Syslog data, and use the least administrative effort. The data flow in the data collection rule (DCR) currently looks like this:\n<pre><code>\"dataFlows\": [{\n  \"streams\": [\"Microsoft-Syslog\"],\n  \"destinations\": [\"la-sentinel\"],\n  \"transformKql\": \"source\"\n}]<\/code><\/pre>\nWhich value should you use for transformKql?", "options": ["A. source | where Facility != 'daemon' or SeverityLevel != 'info'", "B. Syslog | where Facility != 'daemon' or SeverityLevel != 'info'", "C. source | project-away Facility, SeverityLevel", "D. source | summarize count() by Facility, SeverityLevel"], "correctAnswers": [0], "explanation": "A is correct: an ingestion-time transformation must start from the virtual table 'source', and not(Facility == 'daemon' and SeverityLevel == 'info') is equivalent to Facility != 'daemon' or SeverityLevel != 'info', so only daemon/info rows are dropped. B is wrong because a transformation cannot reference a workspace table name. C removes columns, not rows, so volume barely drops and detections lose fields. D aggregates the data and changes the output schema, which no longer matches the Syslog table. See Microsoft Learn: 'Transform or filter data with data collection rules in Azure Monitor'."}, {"id": 2, "domain": "Microsoft Defender XDR", "type": "single", "question": "You are hunting in Microsoft Defender XDR for Office applications that spawn encoded PowerShell. Which condition must replace <MISSING> in the query?\n<pre><code>DeviceProcessEvents\n| where Timestamp > ago(1d)\n| where InitiatingProcessFileName in~ ('winword.exe','excel.exe','outlook.exe')\n| where FileName =~ 'powershell.exe'\n| where <MISSING><\/code><\/pre>", "options": ["A. ProcessCommandLine startswith '-enc'", "B. FileName contains 'enc'", "C. ProcessCommandLine has_any ('-enc', '-encodedcommand')", "D. InitiatingProcessCommandLine has 'powershell'"], "correctAnswers": [2], "explanation": "C is correct: has_any performs a case-insensitive term match against the PowerShell process command line for the encoded-command switch and its abbreviation. A fails because ProcessCommandLine begins with the executable path, not the switch. B inspects the file name (powershell.exe), which never contains 'enc' as a switch. D filters the parent's command line, which is Word/Excel/Outlook, not PowerShell. See Microsoft Learn: 'Advanced hunting query best practices' and 'DeviceProcessEvents table'."}, {"id": 3, "domain": "Microsoft Defender XDR", "type": "single", "question": "You want to list users who clicked a URL from delivered phishing emails and were allowed to reach the destination. Which condition completes the query?\n<pre><code>let Phish = EmailEvents\n| where Timestamp > ago(7d)\n| where DeliveryAction == 'Delivered' and ThreatTypes has 'Phish'\n| project NetworkMessageId, RecipientEmailAddress;\nUrlClickEvents\n| where Timestamp > ago(7d)\n| where <MISSING>\n| join kind=inner Phish on NetworkMessageId\n| project Timestamp, AccountUpn, Url, ActionType<\/code><\/pre>", "options": ["A. ActionType == 'ClickBlocked'", "B. ActionType == 'ClickAllowed'", "C. IsClickedThrough == false", "D. Workload == 'Teams'"], "correctAnswers": [1], "explanation": "B is correct: ClickAllowed means Safe Links let the user reach the URL, which is the exposure you must investigate. A returns clicks that Safe Links blocked, which is a mitigated outcome. C only tells you the user did not bypass a warning page; it does not prove the click was allowed. D restricts to Teams and ignores email clicks. See Microsoft Learn: 'UrlClickEvents table in advanced hunting'."}, {"id": 4, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "Contoso has a change freeze that prevents installing any new software on production Azure VMs. The security team must still get vulnerability findings and exposed secrets detection for these VMs in Microsoft Defender for Cloud. What should you do?", "options": ["A. Deploy the Log Analytics agent (MMA) by using Azure Policy", "B. Enable Microsoft Defender for App Service", "C. Configure continuous export to Event Hubs", "D. Enable agentless scanning for machines in Defender CSPM or Defender for Servers Plan 2"], "correctAnswers": [3], "explanation": "D is correct: agentless scanning snapshots VM disks and analyzes them out of band, so it needs no software on the VM and provides vulnerability and secrets findings. A installs an agent (and the MMA has been retired). B protects App Service, not VMs. C only exports data and generates no findings. See Microsoft Learn: 'Agentless machine scanning in Microsoft Defender for Cloud'."}, {"id": 5, "domain": "Microsoft Sentinel", "type": "single", "question": "CEF logs from a firewall are forwarded to a Linux log forwarder running AMA with the 'Common Event Format (CEF) via AMA' connector. The DCR collects only LOCAL0, and CommonSecurityLog stays empty. A raw message captured on the forwarder is:\n<pre><code><165>Nov 15 10:22:01 fw01 CEF:0|Contoso|FW|1.0|100|Port scan|5|src=198.51.100.7 dst=10.1.1.20<\/code><\/pre>\nWhich facility must you add to the DCR?", "options": ["A. LOCAL0", "B. LOCAL4", "C. LOCAL5", "D. AUTH"], "correctAnswers": [1], "explanation": "B is correct: the PRI value is facility*8 + severity. 165 = 20*8 + 5, so facility 20 (local4) and severity 5 (notice). The DCR must include that facility or the forwarder never passes the event to AMA's CEF stream. A (16) is what is already collected, C (21) and D (4) do not match the PRI. See Microsoft Learn: 'Ingest CEF logs with the Azure Monitor Agent'."}, {"id": 6, "domain": "Microsoft Defender XDR", "type": "single", "question": "You are building a password-spray hunt. Which expression completes the summarize operator?\n<pre><code>DeviceLogonEvents\n| where Timestamp > ago(1h)\n| where ActionType == 'LogonFailed' and isnotempty(RemoteIP)\n| summarize Attempts = count(), <MISSING> by RemoteIP, bin(Timestamp, 15m)\n| where Attempts > 100 and TargetedAccounts > 20<\/code><\/pre>", "options": ["A. TargetedAccounts = dcount(AccountName)", "B. TargetedAccounts = count(AccountName)", "C. TargetedAccounts = make_set(AccountName)", "D. TargetedAccounts = max(AccountName)"], "correctAnswers": [0], "explanation": "A is correct: spray activity is many distinct accounts from one source, and dcount returns the distinct count as a number. B counts non-null values (same as total attempts), so it cannot reveal breadth. C returns an array, so the numeric comparison > 20 is invalid. D returns the alphabetically greatest name. See Microsoft Learn: 'dcount() aggregation function'."}, {"id": 7, "domain": "Microsoft Defender XDR", "type": "single", "question": "The ASR rule 'Block credential stealing from the Windows local security authority subsystem (lsass.exe)' was deployed in Audit mode with Intune. You must find devices where the rule would have blocked activity. Which ActionType should you filter on in the DeviceEvents table?", "options": ["A. AsrLsassCredentialTheftBlocked", "B. ControlledFolderAccessViolationAudited", "C. AsrLsassCredentialTheftAudited", "D. ExploitGuardNetworkProtectionAudited"], "correctAnswers": [2], "explanation": "C is correct: audit-mode ASR hits are logged in DeviceEvents with an ActionType ending in 'Audited' for that rule. A is logged only when the rule is in Block mode. B belongs to Controlled folder access and D to Network protection. See Microsoft Learn: 'Attack surface reduction rules reference' and 'Investigate ASR events with advanced hunting'."}, {"id": 8, "domain": "Microsoft Sentinel", "type": "single", "question": "The following rule query against 400 million SecurityEvent rows is slow. The watchlist contains about 200 rows. How should you optimize the query?\n<pre><code>SecurityEvent\n| where TimeGenerated > ago(1d) and EventID == 4625\n| join kind=inner (\n    _GetWatchlist('HoneypotHosts') | project Computer = SearchKey\n  ) on Computer<\/code><\/pre>", "options": ["A. Change to kind=fullouter", "B. Add hint.strategy=broadcast to the join", "C. Add | sort by TimeGenerated before the join", "D. Replace the join with union"], "correctAnswers": [1], "explanation": "B is correct: when the left side is large and the right side is small, broadcast join sends the small table to every node and avoids shuffling the large table. A returns unmatched rows and increases the work. C sorting a huge set before a join adds cost without helping. D does not perform a key match. See Microsoft Learn: 'Join operator' (broadcast strategy) and 'KQL best practices for Microsoft Sentinel'."}, {"id": 9, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "The CISO asks you to identify internet-exposed Azure VMs that have high-severity vulnerabilities and a network path to a storage account holding sensitive data. You need a graph-based view that shows these chains and lets you query relationships. What should you enable?", "options": ["A. The Defender CSPM plan, then use attack path analysis and cloud security explorer", "B. Only the free foundational CSPM recommendations", "C. Defender for Servers Plan 1", "D. The regulatory compliance dashboard"], "correctAnswers": [0], "explanation": "A is correct: attack path analysis and the cloud security explorer are Defender CSPM capabilities built on the cloud security graph. B gives per-resource recommendations and secure score but no graph relationships. C adds Defender for Endpoint integration, not attack paths. D reports compliance posture against standards. See Microsoft Learn: 'Identify and remediate attack paths' and 'Cloud security explorer'."}, {"id": 10, "domain": "Microsoft Defender XDR", "type": "single", "question": "Unified RBAC is active in the Microsoft Defender portal. Tier 2 analysts must run custom PowerShell scripts stored in the live response library on endpoints, while Tier 1 analysts must be limited to read-only investigative commands. Which permission should you grant to Tier 2?", "options": ["A. Live response capabilities (basic)", "B. Security Reader role", "C. Global Reader role", "D. Live response capabilities (advanced)"], "correctAnswers": [3], "explanation": "D is correct: advanced live response allows running scripts from the library, uploading files, and downloading files. A (basic) permits only basic investigative commands, which is what Tier 1 needs. B and C are Microsoft Entra roles that give read access but not live response sessions. Live response must also be enabled in Advanced features. See Microsoft Learn: 'Investigate entities on devices using live response'."}, {"id": 11, "domain": "Microsoft Defender XDR", "type": "single", "question": "An analyst can view delivered phishing emails in Threat Explorer, but the 'Soft delete' and 'Move to junk' remediation actions are unavailable. What is the most likely cause?", "options": ["A. The analyst lacks the Mailbox Import Export role", "B. Only Global Administrators can remediate email", "C. The analyst is missing the Search and Purge role", "D. Safe Attachments is disabled"], "correctAnswers": [2], "explanation": "C is correct: remediation actions in Threat Explorer require the Search and Purge role in the Email & collaboration permissions. A is for exporting mailbox content. B is false; delegation is intended so least privilege can be used. D affects detonation, not remediation. See Microsoft Learn: 'Permissions in the Microsoft Defender portal' and 'Remediate malicious email delivered in Office 365'."}, {"id": 12, "domain": "Microsoft Sentinel", "type": "single", "question": "A dashboard queries 30 days of 3 TB/day CommonSecurityLog data and times out. You want to precompute hourly aggregates, store them for fast queries, and keep costs low. What should you use?", "options": ["A. A summary rule that writes aggregated results to a custom table", "B. A materialized view in the Log Analytics workspace", "C. The Basic logs plan on CommonSecurityLog", "D. Longer interactive retention on CommonSecurityLog"], "correctAnswers": [0], "explanation": "A is correct: summary rules run on a schedule, aggregate high-volume data, and store results in a custom log table that is fast and cheap to query. B is wrong because materialized views are an Azure Data Explorer feature, not available in Log Analytics workspaces. C reduces ingestion cost but limits querying and does not accelerate dashboards. D increases cost and does not speed queries. See Microsoft Learn: 'Aggregate Microsoft Sentinel data with summary rules'."}, {"id": 13, "domain": "Microsoft Defender XDR", "type": "single", "question": "Automated investigation and response (AIR) automatically remediates malicious files in user profile folders, but remediation of files under C:\\Windows\\System32 waits in the Action center for approval. Which automation level is configured for the device group?", "options": ["A. Full - remediate threats automatically", "B. Semi - require approval for any remediation", "C. Semi - require approval for core folders remediation", "D. No automated response"], "correctAnswers": [2], "explanation": "C is correct: this level auto-remediates in non-core locations but asks for approval for core folders such as Windows and Program Files. A would remediate everywhere automatically. B would require approval for all remediation, including user folders. D performs no automated remediation. See Microsoft Learn: 'Automated investigation and response in Microsoft Defender for Endpoint'."}, {"id": 14, "domain": "Microsoft Sentinel", "type": "single", "question": "A scheduled rule runs every 5 minutes with a 5-minute lookback, yet it misses failed sign-ins that arrive about 8 minutes late. The query is:\n<pre><code>SigninLogs\n| where TimeGenerated > ago(5m)\n| where ResultType == 50126\n| summarize Failures = count() by UserPrincipalName\n| where Failures > 10<\/code><\/pre>\nWhat should you do?", "options": ["A. Convert it to an NRT rule to remove the latency", "B. Reduce the rule frequency to 1 minute", "C. Enable 'Group all events into a single alert'", "D. Widen the TimeGenerated window by the expected delay and filter on ingestion_time()"], "correctAnswers": [3], "explanation": "D is correct: use an extended TimeGenerated window (delay + lookback) combined with ingestion_time() > ago(lookback), so events that arrive late are evaluated exactly once. A does not remove ingestion latency because NRT also queries TimeGenerated. B is not allowed (minimum 5 minutes) and would not solve the delay. C changes alert grouping only. See Microsoft Learn: 'Handle ingestion delay in scheduled analytics rules'."}, {"id": 15, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "A dev subscription generates repeated benign alerts from a known admin jump server (IP 10.20.1.5). You must stop only those alerts, keep the plan enabled, and leave other detections active. What should you do?", "options": ["A. Disable the Defender for Servers plan on the subscription", "B. Create an alert suppression rule scoped to the subscription with the alert name and the IP entity condition", "C. Create an Azure Policy exemption for the subscription", "D. Disable the regulatory compliance standard"], "correctAnswers": [1], "explanation": "B is correct: suppression rules hide specific alerts by alert type, scope, and entity conditions, with an optional expiry. A removes all protection. C affects policy recommendations, not alerts. D has no effect on alerts. See Microsoft Learn: 'Suppress alerts from Microsoft Defender for Cloud'."}, {"id": 16, "domain": "Microsoft Defender XDR", "type": "single", "question": "A custom detection rule cannot be saved because the query lacks required columns. Which change fixes the query while keeping the aggregation?\n<pre><code>DeviceFileEvents\n| where Timestamp > ago(1h)\n| where FolderPath has 'AppData' and FileName endswith '.iso'\n| summarize FileCount = count() by DeviceId, DeviceName<\/code><\/pre>", "options": ["A. summarize FileCount = count(), arg_max(Timestamp, ReportId) by DeviceId, DeviceName", "B. Add | project DeviceName, FileCount", "C. Add | extend ReportId = new_guid()", "D. Add | take 100"], "correctAnswers": [0], "explanation": "A is correct: custom detections require Timestamp, ReportId, and an entity identifier such as DeviceId; arg_max preserves a real event's Timestamp and ReportId. B drops required columns. C produces an arbitrary ReportId that does not link to a real event and still lacks Timestamp. D limits rows but does not add columns. See Microsoft Learn: 'Create and manage custom detection rules'."}, {"id": 17, "domain": "Microsoft Sentinel", "type": "single", "question": "Any successful sign-in by a break-glass account recorded in SigninLogs must create an incident within about one minute. Which rule type should you use?", "options": ["A. A scheduled rule with a 1-minute frequency", "B. A Fusion rule", "C. A near-real-time (NRT) rule", "D. A Microsoft security incident creation rule"], "correctAnswers": [2], "explanation": "C is correct: NRT rules run roughly every minute and are designed for low-latency detections. A is not possible because scheduled rules have a minimum frequency of 5 minutes. B is ML-based correlation that cannot be customized to a specific account. D only turns alerts from other Microsoft products into incidents. See Microsoft Learn: 'Detect threats quickly with near-real-time (NRT) analytics rules'."}, {"id": 18, "domain": "Microsoft Defender XDR", "type": "single", "question": "Microsoft Defender for Identity raises 'Suspected DCSync attack (replication of directory services)' from a workstation using an IT admin's account. What is the best immediate response?", "options": ["A. Reset the krbtgt password twice and take no other action", "B. Isolate the source device, disable or reset the account, then review who holds replication permissions", "C. Add the source IP to the sensor's exclusions", "D. Enable only the ASR rule for LSASS"], "correctAnswers": [1], "explanation": "B is correct: DCSync from a non-domain-controller indicates stolen credentials with replication rights; contain the source and account, then audit 'Replicating Directory Changes' permissions. A is part of recovery after confirmed compromise, not containment alone. C hides a likely true positive. D does not stop an account already abused. See Microsoft Learn: 'Credential access alerts in Defender for Identity'."}, {"id": 19, "domain": "Microsoft Sentinel", "type": "single", "question": "An automation rule fails to run a Logic Apps playbook with a permissions error. What should you do to fix this with least privilege?", "options": ["A. Assign Logic App Contributor to all SOC analysts", "B. Assign Microsoft Sentinel Contributor to the playbook's managed identity", "C. Assign Owner on the subscription to analysts", "D. Grant Microsoft Sentinel Automation Contributor to the Microsoft Sentinel service account on the playbook's resource group"], "correctAnswers": [3], "explanation": "D is correct: Microsoft Sentinel needs explicit permission to trigger playbooks, granted via the Automation Contributor role on the resource group that contains them. A, C grant excessive rights to people that does not authorize the service. B grants rights to the playbook's identity, not to Sentinel's ability to invoke it. See Microsoft Learn: 'Automate threat response with playbooks' (permissions)."}, {"id": 20, "domain": "Microsoft Defender XDR", "type": "single", "question": "Contoso must prevent downloads of files labeled Confidential from SharePoint Online when users sign in from unmanaged devices, while still permitting browsing. Which solution meets this?", "options": ["A. A Microsoft Entra Conditional Access policy that routes sessions through Conditional Access App Control, plus a Defender for Cloud Apps session policy", "B. A file policy with a governance action", "C. An activity policy that only sends alerts", "D. Only the Microsoft 365 app connector"], "correctAnswers": [0], "explanation": "A is correct: the reverse proxy session control enables real-time download blocking based on device state and label. B acts on files after the fact through APIs. C only alerts. D provides visibility and API governance but no inline block. See Microsoft Learn: 'Protect apps with Conditional Access App Control'."}, {"id": 21, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "Defender for Containers is enabled, but no runtime alerts appear for suspicious processes in AKS pods. What is the most likely cause?", "options": ["A. Defender for Resource Manager is not enabled", "B. The Defender sensor is not deployed on the cluster", "C. The Log Analytics daily cap was reached", "D. ACR image scanning is disabled"], "correctAnswers": [1], "explanation": "B is correct: runtime threat detection relies on the Defender sensor DaemonSet on nodes. A covers control plane operations. C is not related to runtime sensors. D affects registry vulnerability findings, not runtime alerts. See Microsoft Learn: 'Defender for Containers architecture' and 'Troubleshoot Defender sensor deployment'."}, {"id": 22, "domain": "Microsoft Sentinel", "type": "multiple", "question": "Contoso needs Tier 1 analysts to triage, assign, and close incidents, and detection engineers to create and edit analytics rules and playbook associations. Apply least privilege. Select two.", "options": ["A. Tier 1 analysts: Microsoft Sentinel Responder", "B. Tier 1 analysts: Microsoft Sentinel Contributor", "C. Detection engineers: Microsoft Sentinel Contributor", "D. Detection engineers: Owner on the subscription", "E. Tier 1 analysts: Microsoft Sentinel Reader"], "correctAnswers": [0, 2], "explanation": "A and C are correct: Responder manages incidents (assign, comment, close) without editing rules; Contributor can create and edit rules, workbooks, and watchlists. B grants rule editing to Tier 1. D grants far more than needed. E can only read incidents. See Microsoft Learn: 'Roles and permissions in Microsoft Sentinel'."}, {"id": 23, "domain": "Microsoft Defender XDR", "type": "single", "question": "You need the devices exposed to CVE-2023-23397, one row per device. DeviceInfo stores periodic snapshots. What replaces <MISSING>?\n<pre><code>DeviceTvmSoftwareVulnerabilities\n| where CveId == 'CVE-2023-23397'\n| join kind=inner (DeviceInfo | <MISSING>) on DeviceId\n| project DeviceName, OSPlatform, SoftwareName, SoftwareVersion<\/code><\/pre>", "options": ["A. distinct DeviceName", "B. take 1", "C. summarize arg_max(Timestamp, *) by DeviceId", "D. where isnotempty(OSPlatform)"], "correctAnswers": [2], "explanation": "C is correct: it keeps only the latest snapshot per device, so the join does not duplicate rows. A removes DeviceId, so the join key is missing. B returns one device only. D leaves multiple snapshots per device. See Microsoft Learn: 'DeviceTvmSoftwareVulnerabilities table' and 'DeviceInfo table'."}, {"id": 24, "domain": "Microsoft Sentinel", "type": "single", "question": "A watchlist 'VIPUsers' (SearchKey = UPN) exists. Which line completes the query to return only VIP sign-ins?\n<pre><code>let VipUsers = _GetWatchlist('VIPUsers') | project SearchKey;\nSigninLogs\n| where TimeGenerated > ago(1d) and ResultType == 0\n<MISSING><\/code><\/pre>", "options": ["A. | join kind=inner VipUsers on $left.UserPrincipalName == $right.SearchKey", "B. | join VipUsers on UserPrincipalName", "C. | where UserPrincipalName == VipUsers", "D. | where UserPrincipalName in (SearchKey)"], "correctAnswers": [0], "explanation": "A is correct: the watchlist column is SearchKey, so the join maps the differently named keys. B fails because VipUsers has no UserPrincipalName column. C compares a string to a table. D references a column that does not exist in SigninLogs. See Microsoft Learn: 'Use watchlists in analytics rules' and '_GetWatchlist() function'."}, {"id": 25, "domain": "Microsoft Defender XDR", "type": "single", "question": "Defender for Cloud Apps raises many 'Impossible travel' alerts caused by the corporate VPN's egress IPs. How do you reduce false positives without weakening detection for everyone?", "options": ["A. Disable the Impossible travel policy", "B. Lower policy sensitivity to Low for all users", "C. Allow the VPN IPs in a Conditional Access named location only", "D. Add the VPN egress ranges to IP address ranges with a corporate/VPN category"], "correctAnswers": [3], "explanation": "D is correct: tagging the ranges tells the anomaly engine these are known corporate locations, so travel between them is not flagged. A and B reduce coverage broadly. C affects Entra policy, not MDCA anomaly detection. See Microsoft Learn: 'Create anomaly detection policies in Defender for Cloud Apps' and 'IP address ranges'."}, {"id": 26, "domain": "Microsoft Defender XDR", "type": "multiple", "question": "A user consented to a malicious multi-tenant app that has Mail.ReadWrite. Which two actions contain the incident? Select two.", "options": ["A. Reset the on-premises krbtgt account", "B. Revoke the user's refresh tokens and sessions", "C. Enable Safe Links", "D. Disable the enterprise application and remove its consent grants", "E. Create a mail flow rule"], "correctAnswers": [1, 3], "explanation": "B and D are correct: revoking tokens invalidates existing access, and disabling the service principal and removing consent stops further use. A is unrelated to cloud OAuth. C and E do not remove OAuth access. See Microsoft Learn: 'Investigate and remediate risky OAuth apps'."}, {"id": 27, "domain": "Microsoft Sentinel", "type": "single", "question": "An analytics rule must detect denied network sessions across Palo Alto, Cisco, and AWS VPC logs with the best performance. What should you use?", "options": ["A. _ASim_NetworkSession followed by where filters", "B. The _Im_NetworkSession filtering parser with parameters", "C. A union of all source tables", "D. A custom function with no normalization"], "correctAnswers": [1], "explanation": "B is correct: ASIM filtering parsers push filter parameters down into source parsers, giving normalized fields and better performance. A parses everything first. C requires vendor-specific field logic. D lacks normalization. See Microsoft Learn: 'Advanced Security Information Model (ASIM) parsers'."}, {"id": 28, "domain": "Microsoft Defender for Cloud", "type": "multiple", "question": "You must automatically delete malicious blobs uploaded to a storage account. Select two actions.", "options": ["A. Enable Defender for Resource Manager", "B. Enable on-upload malware scanning in Defender for Storage", "C. Configure the storage firewall", "D. Use scan results sent to Event Grid to trigger a Logic App or Function that deletes the blob"], "correctAnswers": [1, 3], "explanation": "B and D are correct: malware scanning produces scan results that can be routed to Event Grid to automate responses. A and C do not scan blobs. See Microsoft Learn: 'Set up automated response to malware scanning'."}, {"id": 29, "domain": "Microsoft Defender XDR", "type": "single", "question": "You must isolate a compromised Windows laptop but keep Teams and Outlook working so the user can communicate with the SOC. Which action?", "options": ["A. Full isolation", "B. Restrict app execution", "C. Selective isolation", "D. Contain device"], "correctAnswers": [2], "explanation": "C is correct: selective isolation allows Outlook, Teams, and Skype connectivity. A blocks all except Defender. B limits executables, not network. D is for unmanaged devices. See Microsoft Learn: 'Take response actions on a device'."}, {"id": 30, "domain": "Microsoft Sentinel", "type": "single", "question": "UEBA is enabled. Which table do you query to see per-event scores (0-10)?\n<pre><code><TableName>\n| where TimeGenerated > ago(7d) and InvestigationPriority >= 7\n| summarize Events = count() by UserPrincipalName<\/code><\/pre>", "options": ["A. IdentityInfo", "B. UserPeerAnalytics", "C. Anomalies", "D. BehaviorAnalytics"], "correctAnswers": [3], "explanation": "D is correct: BehaviorAnalytics contains InvestigationPriority. A contains identity context, B stores peer rankings, and C contains ML anomaly records. See Microsoft Learn: 'Microsoft Sentinel UEBA reference'."}, {"id": 31, "domain": "Microsoft Defender XDR", "type": "multiple", "question": "To block a malicious URL through a custom indicator on Windows endpoints, which two prerequisites must be met? Select two.", "options": ["A. Network protection enabled in block mode", "B. Controlled folder access enabled", "C. Custom network indicators enabled in Advanced features", "D. Tamper protection enabled", "E. Attack surface reduction rule for scripts"], "correctAnswers": [0, 2], "explanation": "A and C are correct. URL/IP indicators are enforced by Network protection, which must be in block mode (audit mode only logs), and the 'Custom network indicators' toggle in Advanced features must be on or the indicators are ignored. B protects folders against ransomware, D prevents tampering with security settings, and E blocks script behaviors; none of them enforce indicators. See Microsoft Learn: 'Create indicators for IPs and URLs/domains'."}, {"id": 32, "domain": "Microsoft Sentinel", "type": "single", "question": "You want ML-based correlation of low-fidelity alerts from Microsoft Entra ID Protection and Defender for Cloud Apps into high-fidelity incidents without writing KQL. What should you do?", "options": ["A. Ensure the Advanced Multistage Attack Detection (Fusion) rule is enabled and the data sources are connected", "B. Create a scheduled rule with join", "C. Create an NRT rule", "D. Enable UEBA only"], "correctAnswers": [0], "explanation": "A is correct: Fusion is the ML-based multistage attack detection that correlates alerts from Entra ID Protection, Defender for Cloud Apps and other sources without custom KQL. B and C require you to write and maintain KQL logic and do not provide ML correlation. D scores entity behavior but does not merge alerts into multistage incidents. See Microsoft Learn: 'Advanced multistage attack detection in Microsoft Sentinel'."}, {"id": 33, "domain": "Microsoft Defender XDR", "type": "single", "question": "Contoso uses a third-party antivirus as primary, so Defender Antivirus runs passive. You want Defender for Endpoint to remediate malicious artifacts detected post-breach by behavior. What should you enable?", "options": ["A. Tamper protection", "B. EDR in block mode", "C. ASR audit mode", "D. Uninstall the third-party antivirus"], "correctAnswers": [1], "explanation": "B is correct: EDR in block mode lets Defender for Endpoint block post-breach artifacts based on behavior even when Defender Antivirus is passive. A protects settings from modification but does not block artifacts. C only logs. D is unnecessary and removes the third-party protection. See Microsoft Learn: 'Endpoint detection and response in block mode'."}, {"id": 34, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "Contoso has SQL Server on Windows VMs outside Azure. You need vulnerability assessment and threat protection. What should you do?", "options": ["A. Enable Defender for Azure SQL Databases", "B. Enable Defender for Storage", "C. Enable the SQL servers on machines plan and onboard hosts with Azure Arc", "D. Enable Defender for App Service"], "correctAnswers": [2], "explanation": "C is correct: the 'SQL servers on machines' plan covers SQL Server on VMs, and non-Azure hosts are onboarded through Azure Arc. A covers PaaS Azure SQL Database and Managed Instance, B covers storage accounts, and D covers App Service. See Microsoft Learn: 'Enable Defender for SQL servers on machines'."}, {"id": 35, "domain": "Microsoft Sentinel", "type": "single", "question": "A playbook must change incident severity and add comments, and run from an automation rule. Which trigger should you use?", "options": ["A. Microsoft Sentinel incident", "B. Microsoft Sentinel alert", "C. HTTP request", "D. Recurrence"], "correctAnswers": [0], "explanation": "A is correct: the incident trigger passes the incident object, so the playbook can change severity and add comments, and it can be run from automation rules. B passes only alert data and cannot be launched by incident automation rules. C has no Sentinel context. D runs on a schedule without any incident. See Microsoft Learn: 'Create and use Microsoft Sentinel playbooks'."}, {"id": 36, "domain": "Microsoft Defender XDR", "type": "single", "question": "Attackers impersonate Contoso executives with look-alike display names. What should you configure in Defender for Office 365?", "options": ["A. Stricter SPF", "B. Safe Attachments", "C. Anti-malware policy", "D. Add executives to user impersonation protection in an anti-phishing policy"], "correctAnswers": [3], "explanation": "D is correct: user impersonation protection in anti-phishing policies detects look-alike senders for the listed executives. A validates sender authorization for a domain, not a display-name look-alike. B detonates attachments. C scans for malware. See Microsoft Learn: 'Anti-phishing policies in Microsoft Defender for Office 365'."}, {"id": 37, "domain": "Microsoft Defender XDR", "type": "single", "question": "Which line completes the inbox-rule forwarding hunt?\n<pre><code>CloudAppEvents\n| where Timestamp > ago(7d) and ActionType == 'New-InboxRule'\n| extend Params = parse_json(RawEventData).Parameters\n<MISSING>\n| where tostring(P.Name) in ('ForwardTo','RedirectTo','ForwardAsAttachmentTo')\n| project Timestamp, AccountDisplayName, Target = tostring(P.Value)<\/code><\/pre>", "options": ["A. | extend P = Params[0]", "B. | mv-expand P = Params", "C. | summarize make_set(Params)", "D. | parse Params with *"], "correctAnswers": [1], "explanation": "B is correct: mv-expand turns each element of the Parameters array into its own row so the Name/Value filter works. A reads only the first parameter, so ForwardTo in another position is missed. C collapses rows instead of expanding. D works on strings and cannot split a dynamic array. See Microsoft Learn: 'mv-expand operator'."}, {"id": 38, "domain": "Microsoft Sentinel", "type": "multiple", "question": "Windows events from AMA appear in SecurityEvent, but event 4688 is absent while Heartbeat is healthy. Select two likely causes.", "options": ["A. Workspace uses pay-as-you-go", "B. The DCR XPath filter excludes event 4688", "C. Audit Process Creation is not enabled on the hosts", "D. Heartbeat retention is short"], "correctAnswers": [1, 2], "explanation": "B and C are correct: the DCR XPath must include the event ID, and the host must generate it, which for 4688 requires the Audit Process Creation policy. A has no effect on which events are collected. D affects only Heartbeat retention, not SecurityEvent. See Microsoft Learn: 'Collect Windows events with Azure Monitor Agent'."}, {"id": 39, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "You need to export secure score and recommendations to a Log Analytics workspace for custom workbooks. What do you use?", "options": ["A. Continuous export", "B. Workflow automation", "C. Regulatory compliance", "D. An action group"], "correctAnswers": [0], "explanation": "A is correct: continuous export streams recommendations, secure score and alerts to a Log Analytics workspace or Event Hubs. B triggers Logic Apps but stores nothing. C is a reporting view. D only sends notifications. See Microsoft Learn: 'Continuously export Microsoft Defender for Cloud data'."}, {"id": 40, "domain": "Microsoft Defender XDR", "type": "single", "question": "A management script on specific servers triggers a benign alert repeatedly. How do you handle it with the least impact on detection?", "options": ["A. Disable cloud-delivered protection", "B. Turn off ASR", "C. Create an alert tuning rule scoped to those devices that resolves the alert as expected activity", "D. Add Defender Antivirus path exclusions"], "correctAnswers": [2], "explanation": "C is correct: an alert tuning rule scoped to the specific devices and alert resolves only the known benign pattern and is auditable. A and B reduce protection for the whole estate. D excludes paths from antivirus scanning but does not suppress behavioral alerts. See Microsoft Learn: 'Alert tuning in Microsoft Defender XDR'."}, {"id": 41, "domain": "Microsoft Sentinel", "type": "single", "question": "Firewall verbose logs at 1.5 TB/day are searched rarely and need no analytics rules. What is the most cost-effective approach?", "options": ["A. Increase the commitment tier", "B. Archive immediately", "C. Keep Analytics logs with 7-day retention", "D. Send them to a custom table on the Basic logs plan using a DCR"], "correctAnswers": [3], "explanation": "D is correct: Basic logs ingest much cheaper and fit data that is queried rarely and needs no analytics rules. A lowers the per-GB price but still bills at the analytics rate. B is a retention tier applied after ingestion, so you cannot ingest directly into it. C changes retention only, and ingestion dominates the cost. See Microsoft Learn: 'Log data plans: Analytics, Basic and Auxiliary'."}, {"id": 42, "domain": "Microsoft Defender XDR", "type": "single", "question": "Which filter is most efficient to find mimikatz in a command line?", "options": ["A. where tolower(ProcessCommandLine) contains 'mimikatz'", "B. where ProcessCommandLine has 'mimikatz'", "C. where ProcessCommandLine matches regex 'mimikatz'", "D. where ProcessCommandLine contains_cs 'Mimikatz'"], "correctAnswers": [1], "explanation": "B is correct: has matches indexed terms and is the most efficient of these. A adds a function call per row and contains scans substrings. C uses a regex, the slowest option. D is a case-sensitive substring scan and would also miss other casings. See Microsoft Learn: 'Advanced hunting query best practices'."}, {"id": 43, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "When a high-severity alert fires you must post to Teams and open a ticket via Logic Apps. What do you use?", "options": ["A. Workflow automation", "B. Continuous export to Event Hubs", "C. Secure score", "D. Azure Monitor metric alert"], "correctAnswers": [0], "explanation": "A is correct: workflow automation runs a Logic App when an alert, recommendation or compliance change matches your filter. B moves data and takes no action. C is a score, not an automation. D monitors resource metrics, not Defender for Cloud alerts. See Microsoft Learn: 'Automate responses to Defender for Cloud triggers'."}, {"id": 44, "domain": "Microsoft Sentinel", "type": "single", "question": "Syslog message: 'Failed password for invalid user admin from 198.51.100.7 port 51522 ssh2'. Which parse extracts User, SrcIp, Port?", "options": ["A. | parse SyslogMessage with 'invalid user ' User ' from ' SrcIp ' port ' Port ' ssh2'", "B. | parse SyslogMessage with * 'invalid user ' User ' from ' SrcIp", "C. | parse SyslogMessage with * 'invalid user ' User ' from ' SrcIp ' port ' Port ' ssh2'", "D. | extend User = split(SyslogMessage, ' ')[3]"], "correctAnswers": [2], "explanation": "C is correct: the leading * skips 'Failed password for ', and each literal separates the extracted columns. A lacks the leading wildcard, so the pattern fails because the message does not start with 'invalid user'. B leaves everything after the IP, including the port, in SrcIp. D returns 'invalid' (index 3 after splitting on spaces). See Microsoft Learn: 'parse operator'."}, {"id": 45, "domain": "Microsoft Defender XDR", "type": "single", "question": "After investigating, you confirm a user is compromised. What action sets risk to High so a user risk policy can enforce a secure password change?", "options": ["A. Dismiss user risk", "B. Confirm user compromised", "C. Disable security defaults", "D. Create a named location"], "correctAnswers": [1], "explanation": "B is correct: confirming the user as compromised sets user risk to High, which lets a user risk Conditional Access policy force a secure password change. A clears the risk. C removes baseline protection. D has no effect on user risk. See Microsoft Learn: 'Remediate risks and unblock users in Microsoft Entra ID Protection'."}, {"id": 46, "domain": "Microsoft Defender XDR", "type": "single", "question": "Detect a dropped executable that runs within 5 minutes. What replaces <MISSING>?\n<pre><code>let Drops = DeviceFileEvents\n| where Timestamp > ago(1d) and ActionType == 'FileCreated'\n| where FolderPath has_any ('AppData', 'Downloads') and FileName endswith '.exe'\n| project DeviceId, SHA1, DropTime = Timestamp;\nDeviceProcessEvents\n| where Timestamp > ago(1d) and ActionType == 'ProcessCreated'\n| join kind=inner Drops on DeviceId, SHA1\n| where <MISSING><\/code><\/pre>", "options": ["A. Timestamp == DropTime", "B. DropTime > Timestamp", "C. Timestamp > ago(5m)", "D. Timestamp between (DropTime .. (DropTime + 5m))"], "correctAnswers": [3], "explanation": "D is correct: the window requires the process to start after the file is created and within 5 minutes. A requires identical timestamps. B tests that the drop happened after the process, the reverse order. C filters on current time and ignores the correlation. See Microsoft Learn: 'between operator'."}, {"id": 47, "domain": "Microsoft Sentinel", "type": "single", "question": "Which completes the anomaly hunt for spikes in failed logons?\n<pre><code>SecurityEvent\n| where EventID == 4625\n| make-series Failures = count() default=0 on TimeGenerated from ago(14d) to now() step 1h by Computer\n| extend (Flag, Score, Baseline) = series_decompose_anomalies(Failures, 2.5)\n<MISSING><\/code><\/pre>", "options": ["A. | mv-expand TimeGenerated to typeof(datetime), Failures to typeof(long), Flag to typeof(int) | where Flag == 1", "B. | where Flag == -1", "C. | where Score == 0", "D. | where Baseline > Failures"], "correctAnswers": [0], "explanation": "A is correct: series_decompose_anomalies returns arrays, so expand them with mv-expand and keep Flag == 1 for upward spikes. B returns unusual dips. C compares an array to a scalar. D compares arrays and ignores the anomaly algorithm. See Microsoft Learn: 'series_decompose_anomalies() function'."}, {"id": 48, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "A recommendation about management ports is already mitigated by Azure Bastion. You want it exempt with documentation. Which exemption category?", "options": ["A. Waiver", "B. Disabled", "C. Mitigated", "D. Deleted"], "correctAnswers": [2], "explanation": "C is correct: the Mitigated category documents that a compensating control exists, so the recommendation is removed from the secure score calculation. A (Waiver) is for accepting risk without a mitigating control. 'Disabled' and 'Deleted' are not exemption categories. See Microsoft Learn: 'Exempt resources from recommendations in Defender for Cloud'."}, {"id": 49, "domain": "Microsoft Defender XDR", "type": "single", "question": "A phishing email from a partner was delivered. The headers show:\n<pre><code>X-MS-Exchange-Organization-SCL: -1\nX-Forefront-Antispam-Report: SFV:SKN;CIP:203.0.113.9<\/code><\/pre>\nWhat is the best fix?", "options": ["A. Raise the phishing threshold", "B. Delete the mail flow rule that sets SCL to -1 and use a scoped allow entry if needed", "C. Enable ZAP only", "D. Add to users' Safe Senders"], "correctAnswers": [1], "explanation": "B is correct: SFV:SKN with SCL -1 means a mail flow rule told Exchange Online to skip filtering. Removing it restores filtering, and a scoped allow entry can be added if needed. A cannot affect skipped messages. C cannot act on messages marked as bypassed. D is a client-side setting that does not fix the tenant bypass. See Microsoft Learn: 'Create safe sender lists in Exchange Online'."}, {"id": 50, "domain": "Microsoft Sentinel", "type": "single", "question": "Find users with a successful sign-in today from a country not seen in the previous 30 days. Which join kind?\n<pre><code>let Baseline = SigninLogs\n| where TimeGenerated between (ago(30d) .. ago(1d)) and ResultType == 0\n| distinct UserPrincipalName, Country = tostring(LocationDetails.countryOrRegion);\nSigninLogs\n| where TimeGenerated > ago(1d) and ResultType == 0\n| extend Country = tostring(LocationDetails.countryOrRegion)\n| distinct UserPrincipalName, Country\n| join kind=<MISSING> Baseline on UserPrincipalName, Country<\/code><\/pre>", "options": ["A. leftanti", "B. leftsemi", "C. inner", "D. rightanti"], "correctAnswers": [0], "explanation": "A is correct: leftanti returns rows from the left table with no match in the baseline, which are the new user and country pairs. B and C return matches. D returns baseline rows that have no match in today's data, which is the reverse. See Microsoft Learn: 'join operator'."}, {"id": 51, "domain": "Microsoft Defender XDR", "type": "multiple", "question": "A device shows as Inactive in Defender for Endpoint. Select three troubleshooting actions.", "options": ["A. Disable cloud-delivered protection", "B. Verify the SENSE service and the Microsoft-Windows-SENSE/Operational log", "C. Install the Microsoft Monitoring Agent", "D. Run the MDE Client Analyzer to validate connectivity", "E. Verify the proxy/firewall allows required Defender URLs", "F. Enable Tamper protection"], "correctAnswers": [1, 3, 4], "explanation": "B, D and E are correct: check the Sense service and its log, test connectivity with the MDE Client Analyzer, and confirm the proxy/firewall allows the required service URLs. A reduces protection and is unrelated to connectivity. C is not needed for Windows 10/11 endpoints, which use the built-in sensor. F protects settings and does not restore communication. See Microsoft Learn: 'Troubleshoot Microsoft Defender for Endpoint onboarding'."}, {"id": 52, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "What does just-in-time VM access modify when access is approved?", "options": ["A. Windows Firewall inside the VM", "B. A Bastion host", "C. Temporary allow rules on the NSG or Azure Firewall", "D. Local admin passwords"], "correctAnswers": [2], "explanation": "C is correct: JIT adds temporary allow rules to the NSG (or Azure Firewall) for the approved source IP, port and duration, and removes them afterward. A is not touched because JIT works at the network layer. B is a separate service. D is outside JIT. JIT requires Defender for Servers Plan 2. See Microsoft Learn: 'Understanding just-in-time virtual machine access'."}, {"id": 53, "domain": "Microsoft Sentinel", "type": "single", "question": "Which header lets one scheduled rule query SecurityEvent across 'law-emea' and 'law-apac' plus the local workspace?", "options": ["A. SecurityEvent | where Workspace in ('law-emea','law-apac')", "B. database('law-emea').SecurityEvent", "C. cluster('law-apac').database('law').SecurityEvent", "D. union SecurityEvent, workspace('law-emea').SecurityEvent, workspace('law-apac').SecurityEvent"], "correctAnswers": [3], "explanation": "D is correct: the workspace() function in a union lets one analytics rule query multiple workspaces. A refers to a column that does not exist. B uses Azure Data Explorer database() syntax. C uses ADX cluster syntax, which is not the supported pattern for rules. See Microsoft Learn: 'Extend Microsoft Sentinel across workspaces and tenants'."}, {"id": 54, "domain": "Microsoft Defender XDR", "type": "single", "question": "Unified RBAC is activated for Defender for Endpoint. An analyst with Entra Security Reader cannot query DeviceProcessEvents. What should you assign?", "options": ["A. Global Reader", "B. A unified RBAC role with Raw data (read) for the endpoint data source", "C. Vulnerability management read", "D. Live response basic"], "correctAnswers": [1], "explanation": "B is correct: once unified RBAC is active for a workload, access is governed by unified roles, and advanced hunting requires Raw data (read) on the relevant data source. A is an Entra role no longer honored for that workload. C covers vulnerability data only. D allows only basic live response commands. See Microsoft Learn: 'Microsoft Defender XDR Unified role-based access control'."}, {"id": 55, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "Which line completes the Azure Resource Graph query for the most common unhealthy recommendations?\n<pre><code>securityresources\n| where type == 'microsoft.security/assessments'\n| where properties.status.code == 'Unhealthy'\n| extend Rec = tostring(properties.displayName)\n<MISSING>\n| order by UnhealthyCount desc<\/code><\/pre>", "options": ["A. | summarize UnhealthyCount = count() by Rec", "B. | summarize UnhealthyCount = dcount(Rec)", "C. | project Rec", "D. | join kind=inner Heartbeat on Rec"], "correctAnswers": [0], "explanation": "A is correct: summarize with count() by the extracted name gives the count of unhealthy assessments per recommendation, and order by then ranks them. B returns a single distinct count. C returns names with no counts. D references a Log Analytics table that Resource Graph cannot join. See Microsoft Learn: 'Resource Graph sample queries for Defender for Cloud'."}, {"id": 56, "domain": "Microsoft Sentinel", "type": "single", "question": "A brute-force rule creates 40 alerts for one host. You want one incident per host. What should you configure?", "options": ["A. Suppress after alert generation", "B. Event grouping: alert per event", "C. Alert grouping by matching Host entity", "D. Disable incident creation"], "correctAnswers": [2], "explanation": "C is correct: alert grouping by matching entities, here Host, merges related alerts into one incident (entity mapping must be configured). A stops the query from running for a period, creating detection gaps instead of grouping. B generates one alert per event and increases the alert count. D removes incidents entirely. See Microsoft Learn: 'Create custom analytics rules to detect threats'."}, {"id": 57, "domain": "Microsoft Defender XDR", "type": "multiple", "question": "Automatic attack disruption contained a user account. Select two true statements.", "options": ["A. Actions wait for analyst approval", "B. Contained assets can be reviewed and released in the Action center", "C. Requires Microsoft Sentinel", "D. Related incidents are tagged 'Attack disruption'"], "correctAnswers": [1, 3], "explanation": "B and D are correct: disrupted assets are listed in the Action center, where you can review and release them, and related incidents carry the 'Attack disruption' tag. A is wrong because actions are automatic when confidence is high. C is wrong because Sentinel is not required. See Microsoft Learn: 'Automatic attack disruption in Microsoft Defender XDR'."}, {"id": 58, "domain": "Microsoft Sentinel", "type": "multiple", "question": "Sentinel is onboarded to the Defender portal. Select two true statements.", "options": ["A. Incidents from Sentinel and Defender XDR appear in a single queue", "B. Azure RBAC no longer applies", "C. Advanced hunting can query XDR and Sentinel tables together", "D. You must delete the workspace"], "correctAnswers": [0, 2], "explanation": "A and C are correct: Sentinel incidents are correlated with XDR incidents in a single queue, and advanced hunting can query XDR and Sentinel tables together. B is wrong because Azure RBAC still applies to the workspace unless you adopt unified RBAC. D is wrong because the workspace remains the data store. See Microsoft Learn: 'Microsoft Sentinel in the Microsoft Defender portal'."}, {"id": 59, "domain": "Microsoft Defender for Cloud", "type": "single", "question": "Which plan detects suspicious Azure management operations such as toolkit-driven permission changes?", "options": ["A. Defender for Key Vault", "B. Defender for DNS", "C. Defender for APIs", "D. Defender for Resource Manager"], "correctAnswers": [3], "explanation": "D is correct: Defender for Resource Manager detects anomalous Azure control-plane operations such as toolkit-driven permission changes. A covers Key Vault access. B covers DNS threats. C covers API Management APIs. See Microsoft Learn: 'Introduction to Microsoft Defender for Resource Manager'."}, {"id": 60, "domain": "Microsoft Defender XDR", "type": "single", "question": "Files with a sensitivity label shared externally in OneDrive must be quarantined automatically. What do you configure?", "options": ["A. A Defender for Cloud Apps file policy with quarantine governance action", "B. A session policy blocking download", "C. An activity policy", "D. An app discovery policy"], "correctAnswers": [0], "explanation": "A is correct: a file policy in Defender for Cloud Apps can detect externally shared files with a sensitivity label and apply the quarantine governance action. B is a real-time session control that blocks downloads and does not quarantine existing files. C alerts on activities. D discovers shadow IT apps. See Microsoft Learn: 'Create file policies in Defender for Cloud Apps'."}]
+};
+
+/* Schema adapter: accepts both the simulator schema and the MCT format
+   {id, domain:"Microsoft Sentinel", type, question (with <pre><code>), options:["A. ..."], correctAnswers:[0], explanation} */
+const DOMAIN_MAP={"Microsoft Defender XDR":1,"Microsoft Defender for Cloud":2,"Microsoft Sentinel":3};
+function normalizeList(list){
+  return list.map(q=>{
+    if(q.question===undefined) return q;
+    let text=String(q.question), code=null, after="";
+    const m=text.match(/<pre><code>([\s\S]*?)<\/code><\/pre>/);
+    if(m){
+      const body=m[1];
+      code={lang:/CEF:0|^\s*<\d+>|X-MS-Exchange|"dataFlows"/.test(body)?"Log / JSON":"KQL",text:body};
+      after=text.slice(m.index+m[0].length).trim(); text=text.slice(0,m.index).trim();
+    }
+    return {domain:DOMAIN_MAP[q.domain]||q.domain,q:text,after,code,
+      options:q.options.map(o=>String(o).replace(/^[A-F]\.\s+/,"")),
+      answer:q.correctAnswers,explanation:q.explanation};
+  });
+}
+function validateList(list){
+  if(!Array.isArray(list)) throw new Error("The JSON must be an array of questions: [ {...}, {...} ]");
+  list.forEach((q,i)=>{
+    const ans=q.correctAnswers||q.answer, txt=q.question||q.q;
+    if(!txt||!Array.isArray(q.options)||q.options.length<2||!Array.isArray(ans)||!ans.length||ans.some(x=>x>=q.options.length||x<0))
+      throw new Error("Invalid question at position "+(i+1)+" (check question, options and correctAnswers).");
+  });
+}
+Object.keys(EXAM_DATA).forEach(k=>{ EXAM_DATA[k]=normalizeList(EXAM_DATA[k]); });
+
+const EXAM_META = {
+  exam1:{title:"Exam 1: Foundational & Core Concepts",level:"Beginner"},
+  exam2:{title:"Exam 2: Intermediate KQL & Defender XDR",level:"Intermediate"},
+  exam3:{title:"Exam 3: Microsoft Sentinel Architecture & Ingestion",level:"Intermediate"},
+  exam4:{title:"Exam 4: Advanced Threat Hunting & Automation (SOAR)",level:"Advanced"},
+  exam5:{title:"Exam 5: Complex Case Studies & Incident Response",level:"Advanced"},
+  exam6:{title:"Exam 6: Master Boss Level (Exam Readiness)",level:"Expert"}
+};
+const DOMAINS = {
+  1:"Domain 1: Mitigate threats using Microsoft Defender XDR",
+  2:"Domain 2: Mitigate threats using Microsoft Defender for Cloud",
+  3:"Domain 3: Mitigate threats using Microsoft Sentinel"
+};
+const PASS_SCORE = 850, MAX_SCORE = 1000, EXAM_SECONDS = 120*60;
+
+/* ============================ STATE ============================ */
+let S = null; // {key, qs, idx, ans[], marked[], remaining, timerId, startedAt, finished}
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const letter = i => String.fromCharCode(65+i);
+const fmt = sec => { sec=Math.max(0,sec); const h=Math.floor(sec/3600), m=Math.floor(sec%3600/60), s=sec%60;
+  return (h?h+":":"")+String(h?m:m).padStart(2,"0")+":"+String(s).padStart(2,"0"); };
+const fmtSpent = sec => { const m=Math.floor(sec/60), s=sec%60; return m+" min "+String(s).padStart(2,"0")+" s"; };
+function show(view){
+  ["lobby","exam","review","report"].forEach(v=>$(v).classList.toggle("hidden",v!==view));
+  const inExam = view==="exam"||view==="review";
+  $("toolbar").classList.toggle("hidden",!inExam);
+  $("progress").classList.toggle("hidden",!inExam);
+  $("timer").classList.toggle("hidden",!inExam);
+  $("examName").textContent = S ? EXAM_META[S.key].title.split(":")[0] : "";
+  window.scrollTo(0,0);
+}
+
+/* ============================ LOBBY ============================ */
+function renderLobby(){
+  $("examGrid").innerHTML = Object.keys(EXAM_META).map(k=>{
+    const n=(EXAM_DATA[k]||[]).length, m=EXAM_META[k];
+    return `<div class="ex"><h3>${esc(m.title)}</h3><small>${esc(m.level)} · ${n} question${n===1?"":"s"} loaded</small>
+    <button class="btn pri" data-start="${k}" ${n?"":"disabled"}>${n?"Start Exam":"No questions loaded"}</button></div>`;
+  }).join("");
+  $("examGrid").querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>startExam(b.dataset.start));
+}
+
+/* ============================ EXAM ============================ */
+function startExam(key){
+  const qs = EXAM_DATA[key]; if(!qs||!qs.length) return;
+  S = {key, qs, idx:0, ans:qs.map(()=>[]), marked:qs.map(()=>false),
+       remaining:EXAM_SECONDS, startedAt:Date.now(), finished:false, timerId:null};
+  S.timerId = setInterval(tick,1000);
+  tick(true);
+  gotoQ(0);
+}
+function tick(first){
+  if(!S||S.finished) return;
+  if(first!==true) S.remaining--;
+  const t=$("timer"); t.textContent=fmt(S.remaining); t.classList.toggle("low",S.remaining<=600);
+  if(S.remaining<=0) finishExam(true);
+}
+function gotoQ(i){
+  S.idx=Math.min(Math.max(0,i),S.qs.length-1);
+  show("exam"); renderQ();
+}
+function renderQ(){
+  const q=S.qs[S.idx], multi=q.answer.length>1, sel=S.ans[S.idx];
+  $("progress").textContent=`Question ${S.idx+1} of ${S.qs.length}`;
+  $("bPrev").disabled=S.idx===0; $("bNext").disabled=S.idx===S.qs.length-1;
+  const mk=$("bMark"); mk.classList.toggle("on",S.marked[S.idx]);
+  mk.textContent=S.marked[S.idx]?"Marked for Review ✓":"Mark for Review";
+  const words={2:"two",3:"three",4:"four",5:"five"};
+  const hint = multi ? `<p class="hint">Select ${words[q.answer.length]||q.answer.length}.</p>` : "";
+  const code = q.code ? `<div class="codelang">${esc(q.code.lang||"Code")}</div><pre class="code">${highlight(q.code.text,q.code.lang)}</pre>` : "";
+  const after = q.after ? `<p class="qtext">${esc(q.after)}</p>` : "";
+  $("qcard").innerHTML = `<div class="qhead"><span>${esc(DOMAINS[q.domain]||"")}</span><span>${multi?"Multiple response":"Single choice"}</span></div>
+    <p class="qtext">${esc(q.q)}</p>${code}${after}${hint}
+    <div role="${multi?"group":"radiogroup"}">${q.options.map((o,i)=>`
+      <label class="opt ${sel.includes(i)?"sel":""}"><input type="${multi?"checkbox":"radio"}" name="opt" value="${i}" ${sel.includes(i)?"checked":""}>
+      <span class="l">${letter(i)}.</span><span>${esc(o)}</span></label>`).join("")}</div>`;
+  $("qcard").querySelectorAll("input").forEach(inp=>inp.onchange=()=>{
+    const v=+inp.value;
+    if(multi){ const a=S.ans[S.idx]; const p=a.indexOf(v); p>-1?a.splice(p,1):a.push(v); a.sort((x,y)=>x-y); }
+    else S.ans[S.idx]=[v];
+    renderQ();
+  });
+}
+function highlight(text,lang){
+  let h=esc(text);
+  if(/kql|kusto/i.test(lang||"")){
+    h=h.replace(/(\/\/.*)$/gm,'<span class="c">$1</span>');
+    h=h.replace(/\b(where|summarize|project|extend|join|union|take|limit|order by|sort by|by|ago|count|dcount|bin|top|distinct|let|parse|mv-expand|render|datetime|contains|has|in|and|or|on|kind|inner|leftouter|between|startswith|endswith|isnotempty|isempty|iff|case|make_set|make_list|arg_max|arg_min|project-away|project-rename|evaluate|materialize)\b(?![^<]*<\/span>)/g,'<span class="k">$1</span>');
+  }
+  return h;
+}
+
+/* ============================ REVIEW SCREEN ============================ */
+function renderReview(){
+  show("review");
+  const a=S.ans.filter(x=>x.length).length, m=S.marked.filter(Boolean).length;
+  $("progress").textContent="Review Screen";
+  $("rgrid").innerHTML=S.qs.map((_,i)=>`<button class="cell ${S.ans[i].length?"ans":""} ${S.marked[i]?"mk":""} ${i===S.idx?"cur":""}" data-i="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join("");
+  $("rgrid").querySelectorAll(".cell").forEach(c=>c.onclick=()=>gotoQ(+c.dataset.i));
+  $("rsum").textContent=`Answered: ${a} · Unanswered: ${S.qs.length-a} · Marked for review: ${m}`;
+}
+
+/* ============================ END / SCORING ============================ */
+function isCorrect(i){
+  const c=S.qs[i].answer, a=S.ans[i];
+  return a.length===c.length && c.every(x=>a.includes(x));
+}
+function openEndModal(){
+  const un=S.ans.filter(x=>!x.length).length, mk=S.marked.filter(Boolean).length;
+  $("modalMsg").innerHTML=`You have <strong>${un}</strong> unanswered and <strong>${mk}</strong> marked question(s). Once you end the exam you cannot return to it.`;
+  $("modal").classList.remove("hidden"); $("mYes").focus();
+}
+function finishExam(timeUp){
+  if(!S||S.finished) return;
+  S.finished=true; clearInterval(S.timerId);
+  $("modal").classList.add("hidden");
+  const spent=Math.min(EXAM_SECONDS,Math.round((Date.now()-S.startedAt)/1000));
+  const total=S.qs.length;
+  const dom={1:{c:0,t:0},2:{c:0,t:0},3:{c:0,t:0}};
+  const results=S.qs.map((q,i)=>{
+    const ok=isCorrect(i); const d=dom[q.domain]||(dom[q.domain]={c:0,t:0});
+    d.t++; if(ok) d.c++;
+    return {i,q,ok,chosen:S.ans[i],marked:S.marked[i]};
+  });
+  const correct=results.filter(r=>r.ok).length;
+  const score=Math.round(correct/total*MAX_SCORE);
+  S.report={score,correct,total,spent,dom,results,pass:score>=PASS_SCORE,timeUp:!!timeUp};
+  renderReport();
+}
+const optList=(q,arr)=>arr.length?arr.map(i=>`${letter(i)}. ${q.options[i]}`).join(" | "):"(no answer)";
+
+function reviewItem(r){
+  const q=r.q, status=r.chosen.length?(r.ok?"Correct":"Incorrect"):"Not answered";
+  const opts=q.options.map((o,i)=>{
+    const isAns=q.answer.includes(i), picked=r.chosen.includes(i);
+    const cls=isAns?(picked?"ro ok":"ro miss"):(picked?"ro bad":"ro");
+    const mark=isAns?"✓":(picked?"✗":"");
+    const note=isAns?(picked?"Your answer · correct":"Correct answer (not selected)"):(picked?"Your answer · incorrect":"");
+    return `<div class="${cls}"><span class="rm" aria-hidden="true">${mark}</span><span class="l">${letter(i)}.</span><span>${esc(o)}</span>${note?`<em>${note}</em>`:""}</div>`;
+  }).join("");
+  const multi=q.answer.length>1;
+  return `<div class="item ${r.ok?"ok":""}" id="rq-${r.i}" data-status="${r.ok?"ok":"bad"}" data-marked="${r.marked?1:0}">
+    <h4><span class="tag">Q${r.i+1}</span><span class="tag ${r.ok?"ok":"bad"}">${status}</span><span class="tag">${esc(DOMAINS[q.domain]||"")}</span>
+    <span class="tag">${multi?"Select "+q.answer.length:"Single choice"}</span>${r.marked?'<span class="tag f">Marked for review</span>':""}</h4>
+    <p class="qtext" style="font-size:15px">${esc(q.q)}</p>
+    ${q.code?`<pre class="code">${highlight(q.code.text,q.code.lang)}</pre>`:""}${q.after?`<p class="qtext" style="font-size:15px">${esc(q.after)}</p>`:""}
+    ${opts}
+    <div class="exp"><strong>Explanation:</strong> ${esc(q.explanation||"No explanation provided.")}</div></div>`;
+}
+function applyReviewFilter(f){
+  let shown=0;
+  document.querySelectorAll("#reviewList .item").forEach(it=>{
+    const vis=f==="all"||(f==="marked"?it.dataset.marked==="1":it.dataset.status===f);
+    it.classList.toggle("hidden",!vis); if(vis) shown++;
+  });
+  document.querySelectorAll(".filters .chip").forEach(c=>c.setAttribute("aria-pressed",String(c.dataset.f===f)));
+  $("filterEmpty").classList.toggle("hidden",shown>0);
+}
+function renderReport(){
+  const R=S.report, m=EXAM_META[S.key];
+  show("report");
+  $("examName").textContent=m.title.split(":")[0];
+  $("report").innerHTML=`<div class="card">
+    <h2 style="margin-top:0">Score Report — ${esc(m.title)}</h2>
+    ${R.timeUp?'<p style="color:var(--bad)"><strong>Time expired. The exam was submitted automatically.</strong></p>':""}
+    <div class="verdict"><div class="score">${R.score} <span style="font-size:22px;color:var(--mut)">/ ${MAX_SCORE}</span></div>
+      <div class="badge ${R.pass?"pass":"fail"}">${R.pass?"PASS":"FAIL"}</div>
+      <div style="color:var(--mut)">Passing score: ${PASS_SCORE}<br>Correct: ${R.correct} of ${R.total} (${(R.correct/R.total*100).toFixed(1)}%)<br>Time spent: ${fmtSpent(R.spent)}</div></div>
+    <h3>Performance by domain</h3>
+    <table><thead><tr><th>Domain</th><th>Correct</th><th>%</th><th></th></tr></thead><tbody>
+    ${Object.keys(R.dom).map(k=>{const d=R.dom[k],p=d.t?Math.round(d.c/d.t*100):null;
+      return `<tr><td>${esc(DOMAINS[k]||"Domain "+k)}</td><td>${d.c} / ${d.t}</td><td>${p===null?"n/a":p+"%"}</td>
+      <td><div class="bar"><span class="${p!==null&&p<70?"low":"good"}" style="width:${p||0}%"></span></div></td></tr>`}).join("")}
+    </tbody></table>
+    <div class="actions noprint">
+      <button class="btn pri" id="bPrint">Print / Save as PDF</button>
+      <button class="btn" id="bCopy">Copy AI Diagnostic Prompt</button>
+      <button class="btn" id="bLobby">Back to Lobby</button>
+    </div>
+    <h3 id="reviewTitle">Answer review</h3>
+    <div class="qlegend"><span><i class="ok"></i>Correct (${R.correct})</span><span><i class="bad"></i>Incorrect or unanswered (${R.total-R.correct})</span></div>
+    <div class="qmap noprint">${R.results.map(r=>`<button class="qdot ${r.ok?"ok":"bad"}" data-goto="${r.i}" aria-label="Question ${r.i+1}: ${r.ok?"correct":"incorrect"}">${r.i+1}</button>`).join("")}</div>
+    <div class="filters noprint" role="group" aria-label="Filter questions">
+      <button class="chip" data-f="all" aria-pressed="true">All (${R.total})</button>
+      <button class="chip" data-f="bad" aria-pressed="false">Incorrect (${R.total-R.correct})</button>
+      <button class="chip" data-f="ok" aria-pressed="false">Correct (${R.correct})</button>
+      <button class="chip" data-f="marked" aria-pressed="false">Marked for review (${R.results.filter(r=>r.marked).length})</button>
+    </div>
+    <p id="filterEmpty" class="hidden" style="color:var(--mut)">No questions in this filter.</p>
+    <div id="reviewList">${R.results.map(reviewItem).join("")}</div>
+  </div>`;
+  document.querySelectorAll(".filters .chip").forEach(c=>c.onclick=()=>applyReviewFilter(c.dataset.f));
+  document.querySelectorAll(".qdot").forEach(b=>b.onclick=()=>{
+    const el=$("rq-"+b.dataset.goto);
+    if(el.classList.contains("hidden")) applyReviewFilter("all");
+    el.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  $("bPrint").onclick=()=>window.print();
+  $("bCopy").onclick=copyPrompt;
+  $("bLobby").onclick=()=>{S=null;renderLobby();show("lobby");};
+}
+
+/* ============================ AI PROMPT ============================ */
+function buildPrompt(){
+  const R=S.report, m=EXAM_META[S.key];
+  const data={
+    exam:m.title, score:R.score, maxScore:MAX_SCORE, passingScore:PASS_SCORE, result:R.pass?"PASS":"FAIL",
+    correct:R.correct, totalQuestions:R.total, timeSpent:fmtSpent(R.spent),
+    domains:Object.keys(R.dom).map(k=>({domain:DOMAINS[k]||"Domain "+k,correct:R.dom[k].c,total:R.dom[k].t,
+      percent:R.dom[k].t?Math.round(R.dom[k].c/R.dom[k].t*100):null})),
+    incorrectQuestions:R.results.filter(r=>!r.ok).map(r=>({
+      number:r.i+1,domain:DOMAINS[r.q.domain],markedForReview:r.marked,question:r.q.q+(r.q.after?" "+r.q.after:""),
+      code:r.q.code?r.q.code.text:undefined,candidateAnswer:optList(r.q,r.chosen),
+      correctAnswer:optList(r.q,r.q.answer),explanation:r.q.explanation}))
+  };
+  return `You are a Microsoft SC-200 (Security Operations Analyst) certification coach.
+Analyze my practice-exam results below and:
+1. Identify my technical gaps per SC-200 domain and sub-topic.
+2. Detect recurring error patterns (e.g., KQL operator confusion, RBAC/permission roles, connector or ingestion choices, SOAR/playbook logic, Defender XDR response actions).
+3. Explain briefly why my wrong choices were tempting and how to avoid them.
+4. Build a focused study plan (priority order, estimated hours, Microsoft Learn modules, KQL labs and hands-on exercises) to reach at least 850/1000.
+
+## Performance summary
+- Exam: ${data.exam}
+- Score: ${data.score} / ${MAX_SCORE} (${data.result}, target ${PASS_SCORE})
+- Correct: ${data.correct} / ${data.totalQuestions}
+- Time spent: ${data.timeSpent}
+${data.domains.map(d=>`- ${d.domain}: ${d.correct}/${d.total}${d.percent===null?"":" ("+d.percent+"%)"}`).join("\n")}
+
+## Data (JSON)
+\`\`\`json
+${JSON.stringify(data,null,2)}
+\`\`\``;
+}
+function toast(msg){
+  const t=document.createElement("div"); t.className="toast noprint"; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(),2600);
+}
+function copyPrompt(){
+  const text=buildPrompt();
+  const fallback=()=>{
+    const ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    let ok=false; try{ok=document.execCommand("copy");}catch(e){}
+    ta.remove(); toast(ok?"AI diagnostic prompt copied.":"Copy failed. Select and copy manually.");
+  };
+  if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(text).then(()=>toast("AI diagnostic prompt copied."),fallback);
+  else fallback();
+}
+
+/* ============================ WIRING ============================ */
+$("bPrev").onclick=()=>gotoQ(S.idx-1);
+$("bNext").onclick=()=>gotoQ(S.idx+1);
+$("bMark").onclick=()=>{S.marked[S.idx]=!S.marked[S.idx];renderQ();};
+$("bReview").onclick=renderReview;
+$("bEnd").onclick=openEndModal; $("rEnd").onclick=openEndModal;
+$("rBack").onclick=()=>gotoQ(S.idx);
+$("rUnans").onclick=()=>{const i=S.ans.findIndex(a=>!a.length); i>-1?gotoQ(i):toast("All questions are answered.");};
+$("rMarked").onclick=()=>{const i=S.marked.indexOf(true); i>-1?gotoQ(i):toast("No questions are marked.");};
+$("mNo").onclick=()=>$("modal").classList.add("hidden");
+$("mYes").onclick=()=>finishExam(false);
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape") $("modal").classList.add("hidden");
+});
+window.addEventListener("beforeunload",e=>{ if(S&&!S.finished){e.preventDefault();e.returnValue="";} });
+
+
+/* ============================ IMPORT ============================ */
+(function(){
+  const sel=$("impExam");
+  sel.innerHTML=Object.keys(EXAM_META).map(k=>`<option value="${k}">${esc(EXAM_META[k].title.split(":")[0])}</option>`).join("");
+  sel.value="exam6";
+  const msg=(t,ok)=>{const m=$("impMsg");m.textContent=t;m.style.color=ok?"var(--ok)":"var(--bad)";};
+  function load(text){
+    try{
+      const list=JSON.parse(text.trim());
+      validateList(list);
+      const k=sel.value; EXAM_DATA[k]=normalizeList(list);
+      try{localStorage.setItem("sc200_"+k,JSON.stringify(list));}catch(e){}
+      renderLobby();
+      msg(`Loaded ${list.length} questions into ${EXAM_META[k].title.split(":")[0]}.`+(list.length!==60?" Note: the exam is designed for 60 questions.":""),true);
+    }catch(e){ msg("Could not load: "+e.message,false); }
+  }
+  $("impBtn").onclick=()=>{
+    const f=$("impFile").files[0];
+    if(f){ const r=new FileReader(); r.onload=()=>load(String(r.result)); r.onerror=()=>msg("Could not read the file.",false); r.readAsText(f); }
+    else if($("impText").value.trim()) load($("impText").value);
+    else msg("Choose a .json file or paste the JSON array first.",false);
+  };
+  // restore previously imported banks
+  Object.keys(EXAM_META).forEach(k=>{
+    try{const t=localStorage.getItem("sc200_"+k); if(t){const l=JSON.parse(t); validateList(l); EXAM_DATA[k]=normalizeList(l);}}catch(e){}
+  });
+})();
+
+renderLobby(); show("lobby");
+</script>
+</body>
+</html>

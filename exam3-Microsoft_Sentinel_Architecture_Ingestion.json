@@ -1,0 +1,1000 @@
+[
+  {
+    "id": 1,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You are designing a Microsoft Sentinel ingestion pipeline for a Linux syslog forwarder receiving CEF events from perimeter firewalls. You need to strip out noisy debug messages and drop non-security interface statistics at ingestion time to minimize Log Analytics costs. What should you configure?",
+    "options": [
+      "A. A Data Collection Rule (DCR) with an ingestion-time KQL transformation using the source | where ... operator.",
+      "B. A Microsoft Sentinel Workbook with visual filters.",
+      "C. A Scheduled Analytics Rule that deletes unwanted rows every 5 minutes.",
+      "D. A Watchlist containing all debug log strings."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Ingestion-time DCR transformations filter and modify incoming data streams before storage, reducing ingestion volume and cost."
+  },
+  {
+    "id": 2,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "You are deploying the Azure Monitor Agent (AMA) across 500 Azure and Arc-enabled servers and need to route telemetry securely over ExpressRoute without traversing the public internet. Which two components must you configure together? (Select two.)",
+    "options": [
+      "A. Exchange Online mail flow transport rules.",
+      "B. Public Azure Storage Blob containers with anonymous read access.",
+      "C. Legacy Microsoft Monitoring Agent (MMA) gateways using Workspace Shared Keys.",
+      "D. Data Collection Endpoints (DCEs) linked to an Azure Monitor Private Link Scope (AMPLS).",
+      "E. Data Collection Rules (DCRs) associated with the target machines and DCEs."
+    ],
+    "correctAnswers": [
+      3,
+      4
+    ],
+    "explanation": "Data Collection Endpoints provide private ingestion URIs for AMPLS, while DCRs define which logs the AMA collects and forwards."
+  },
+  {
+    "id": 3,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "You are migrating a legacy SIEM environment to Microsoft Sentinel and need to ingest custom JSON security logs from an internal REST API into a custom table named <code>AppAudit_CL</code>. Which three components are required for the modern Logs Ingestion API architecture? (Select three.)",
+    "options": [
+      "A. A legacy Microsoft Monitoring Agent (MMA) installed on an on-premises gateway.",
+      "B. A Data Collection Endpoint (DCE) or DCR-based ingestion URI.",
+      "C. An Azure Logic App using an anonymous FTP connector.",
+      "D. A Microsoft Entra ID application registration (or Managed Identity) granted the Monitoring Metrics Publisher role on the DCR.",
+      "E. A Data Collection Rule (DCR) defining the stream declaration and destination table schema.",
+      "F. The deprecated HTTP Data Collector API using a Workspace Shared Key."
+    ],
+    "correctAnswers": [
+      1,
+      3,
+      4
+    ],
+    "explanation": "The modern Logs Ingestion API uses Entra ID OAuth authentication, a Data Collection Endpoint, and a Data Collection Rule to ingest JSON payloads."
+  },
+  {
+    "id": 4,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You are investigating a multi-workspace Microsoft Sentinel architecture for a holding company with three independent subsidiaries in separate Microsoft Entra tenants. Each subsidiary must own its workspace, while the parent SOC manages incidents across all tenants. Which Azure service enables cross-tenant management?",
+    "options": [
+      "A. Azure Bastion",
+      "B. Azure Lighthouse",
+      "C. Azure Virtual WAN",
+      "D. Azure Front Door"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Azure Lighthouse provides cross-tenant delegated resource management, allowing the parent SOC to manage Sentinel workspaces across subsidiary tenants."
+  },
+  {
+    "id": 5,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "You need to ingest high-volume NetFlow and proxy logs into Microsoft Sentinel for 3-year compliance retention and occasional hunting without paying full Analytics tier ingestion prices. Which two configurations satisfy these requirements? (Select two.)",
+    "options": [
+      "A. Forward all logs to an unencrypted public web server.",
+      "B. Set Total Retention (Archive) to 1,095 days and use Search jobs for historical queries.",
+      "C. Configure the destination table plan as Auxiliary Logs or Basic Logs.",
+      "D. Create a Near-Real-Time (NRT) rule running every minute against the table.",
+      "E. Set Interactive Retention to 1,095 days on the Analytics table plan."
+    ],
+    "correctAnswers": [
+      1,
+      2
+    ],
+    "explanation": "Auxiliary/Basic log plans lower ingestion rates for verbose telemetry, while Archive retention with Search jobs preserves multi-year compliance logs."
+  },
+  {
+    "id": 6,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "Examine the following DCR ingestion transformation query:<pre><code>source\n| where SeverityLevel != \"Informational\"\n| extend ParsedTime = todatetime(EventTimestamp)\n| project-away RawPayload</code></pre>What happens to the <code>RawPayload</code> column before the record is written to the Log Analytics workspace?",
+    "options": [
+      "A. It is renamed to AdditionalFields.",
+      "B. It is archived to an Azure Storage Account automatically.",
+      "C. It is dropped at ingestion time, reducing billable data volume.",
+      "D. It is encrypted using a customer-managed key."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "The project-away operator removes specified columns during DCR transformation before storage, lowering ingestion size."
+  },
+  {
+    "id": 7,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "A security architect wants to normalize authentication, DNS, and network firewall logs from multiple third-party vendors so single KQL detection rules work across all sources. Which three ASIM unifying parsers should they use? (Select three.)",
+    "options": [
+      "A. _Im_NetworkSession",
+      "B. FileProfile",
+      "C. _Im_Authentication",
+      "D. _Im_Dns",
+      "E. _GetWatchlist",
+      "F. SecurityIncident"
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      3
+    ],
+    "explanation": "ASIM unifying parsers standardize vendor-specific telemetry into canonical schemas for authentication, DNS, and network session logs."
+  },
+  {
+    "id": 8,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You are configuring a codeless connector (CCF) in Microsoft Sentinel to pull security alerts from a SaaS vendor's REST API. Which authentication mechanism is natively supported by the Codeless Connector Framework?",
+    "options": [
+      "A. Kerberos Constrained Delegation over SMB.",
+      "B. SSH certificate forwarding.",
+      "C. NTLMv2 pass-through authentication.",
+      "D. OAuth2, API Key, or Basic authentication configured directly in the connector JSON definition."
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "The Codeless Connector Framework (CCF) supports standard REST API authentication flows including OAuth2, API keys, and Basic auth."
+  },
+  {
+    "id": 9,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "Your Log Analytics workspace ingests 200 GB of security logs daily into Microsoft Sentinel, and you want to optimize billing predictability and discounts. Which two pricing configurations should you enable? (Select two.)",
+    "options": [
+      "A. Delete the workspace every 30 days to reset the free trial.",
+      "B. Enable Azure Dev/Test pricing on production subscriptions.",
+      "C. Configure a Log Analytics Commitment Tier starting at 200 GB/day.",
+      "D. Configure a matching Microsoft Sentinel Commitment Tier starting at 200 GB/day.",
+      "E. Switch all tables to Pay-As-You-Go per gigabyte."
+    ],
+    "correctAnswers": [
+      2,
+      3
+    ],
+    "explanation": "Both Log Analytics and Microsoft Sentinel offer Commitment Tiers that apply volume discounts once daily ingestion reaches 100 GB/day or higher."
+  },
+  {
+    "id": 10,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You have enabled the Microsoft Defender XDR connector in Microsoft Sentinel to stream raw <code>DeviceProcessEvents</code> and <code>EmailEvents</code> into Sentinel. How does this affect data ingestion billing?",
+    "options": [
+      "A. Raw advanced hunting tables streamed into Sentinel are billed at standard Log Analytics ingestion rates, whereas Defender XDR incidents/alerts are ingested free.",
+      "B. Only Linux telemetry is billed; Windows telemetry is free.",
+      "C. Billing is calculated per endpoint rather than per gigabyte.",
+      "D. All raw Defender XDR telemetry is ingested completely free with unlimited retention."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Defender XDR alerts and incidents sync at no extra cost, whereas streaming raw hunting tables incurs standard Log Analytics ingestion charges."
+  },
+  {
+    "id": 11,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You need to retain raw audit logs in Microsoft Sentinel for 7 years to meet financial regulatory mandates, even though analysts rarely query data older than 90 days. How should you configure table retention?",
+    "options": [
+      "A. Create 7 separate Log Analytics workspaces.",
+      "B. Set Interactive Retention to 90 days and Total Retention (Archive) to 2,555 days (7 years).",
+      "C. Export logs manually to CSV files every week.",
+      "D. Set Interactive Retention to 2,555 days."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Configuring 90 days of interactive retention followed by archive retention minimizes storage costs while preserving historical data."
+  },
+  {
+    "id": 12,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "An analyst needs to investigate archived security logs from 18 months ago in Microsoft Sentinel. Which two native features allow querying or recovering archived data without modifying the table's interactive retention window? (Select two.)",
+    "options": [
+      "A. Live Response sessions.",
+      "B. Near-real-time (NRT) analytics rules.",
+      "C. Safe Links policies.",
+      "D. Search jobs (to run asynchronous KQL queries directly against archived logs).",
+      "E. Data Restore (to temporarily hydrate a specific time range of archived logs into a hot cache table)."
+    ],
+    "correctAnswers": [
+      3,
+      4
+    ],
+    "explanation": "Search jobs scan archived data asynchronously for specific patterns, while Restore hydrates a specific date range for full interactive KQL investigation."
+  },
+  {
+    "id": 13,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You are troubleshooting a Linux CEF forwarder where the Azure Monitor Agent (AMA) is running, but no firewall logs appear in <code>CommonSecurityLog</code>. Running <code>tcpdump</code> confirms UDP 514 packets arrive at the VM. Which local component should you inspect next?",
+    "options": [
+      "A. The Azure Key Vault access policy.",
+      "B. The Windows Event Forwarding (WEF) subscription manager.",
+      "C. The rsyslog or syslog-ng forwarding configuration listening on port 514 and routing CEF messages to the AMA local socket.",
+      "D. The Microsoft Defender for Office 365 anti-phishing policy."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "AMA relies on the local syslog daemon (rsyslog/syslog-ng) to receive network syslog packets and forward them to the AMA socket."
+  },
+  {
+    "id": 14,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You are writing a KQL query in Microsoft Sentinel to correlate sign-in logs with a Threat Intelligence watchlist. Examine the query:<pre><code>SigninLogs\n| where TimeGenerated > ago(1d)\n| join kind=inner (_GetWatchlist('MaliciousIPs')) on $left.IPAddress == $right.SearchKey</code></pre>Why is placing the smaller watchlist table on the right side of the <code>join</code> a KQL best practice?",
+    "options": [
+      "A. Putting the watchlist on the left disables entity mapping.",
+      "B. Left-side tables cannot contain more than 10,000 rows.",
+      "C. KQL requires the right-side table to always contain an IPAddress column.",
+      "D. KQL broadcasts the right-side table across worker nodes, improving join execution speed and preventing memory exhaustion."
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "Placing the smaller dataset on the right enables efficient broadcast distribution across Kusto query worker nodes."
+  },
+  {
+    "id": 15,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "Your organization deploys Microsoft Sentinel Repositories to manage SIEM content as code across development and production workspaces. Which two source control platforms and CI/CD workflows are natively supported? (Select two.)",
+    "options": [
+      "A. Local workstation folders synced via OneDrive.",
+      "B. SharePoint Online document libraries with manual CSV imports.",
+      "C. Azure DevOps repositories with automated Azure Pipelines deployment workflows.",
+      "D. GitHub repositories with automated GitHub Actions deployment workflows.",
+      "E. On-premises Subversion (SVN) servers with FTP sync."
+    ],
+    "correctAnswers": [
+      2,
+      3
+    ],
+    "explanation": "Sentinel Repositories integrates natively with GitHub and Azure DevOps to automate validation and deployment of JSON/YAML content."
+  },
+  {
+    "id": 16,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You need to grant a junior engineer permission to build and edit Microsoft Sentinel Workbooks, without allowing them to view incidents or modify Analytics Rules. Which Azure RBAC role should you assign?",
+    "options": [
+      "A. Workbook Contributor",
+      "B. Microsoft Sentinel Contributor",
+      "C. Security Administrator",
+      "D. Log Analytics Reader"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Workbook Contributor grants scoped permissions to create and edit Workbooks without elevating Sentinel incident or rule privileges."
+  },
+  {
+    "id": 17,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "Which data connector must be enabled in Microsoft Sentinel to ingest Azure subscription-level control plane operations such as resource creations, deletions, and RBAC role assignments into the <code>AzureActivity</code> table?",
+    "options": [
+      "A. Microsoft Entra ID",
+      "B. Azure Activity (configured via Azure Policy diagnostic settings)",
+      "C. Threat Intelligence - TAXII",
+      "D. Azure Key Vault"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "The Azure Activity connector routes subscription control-plane logs via Azure Policy diagnostic settings into the AzureActivity table."
+  },
+  {
+    "id": 18,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "You want to monitor AWS CloudTrail management events and Amazon GuardDuty findings inside Microsoft Sentinel using the serverless AWS S3 connector. Which three AWS resources must be configured during onboarding? (Select three.)",
+    "options": [
+      "A. An AWS Simple Queue Service (SQS) queue publishing notifications when new log files arrive.",
+      "B. An AWS IAM OpenID Connect (OIDC) identity provider and role granting Sentinel read access to S3 and SQS.",
+      "C. An AWS EC2 Windows Server running the legacy MMA agent.",
+      "D. An unencrypted UDP port 514 forwarder on AWS Lambda.",
+      "E. An Exchange Online connector.",
+      "F. An AWS S3 bucket storing CloudTrail and GuardDuty logs."
+    ],
+    "correctAnswers": [
+      0,
+      1,
+      5
+    ],
+    "explanation": "The AWS S3 connector authenticates via OIDC IAM roles and polls SQS queues to ingest logs stored in S3 buckets."
+  },
+  {
+    "id": 19,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "In a Scheduled Analytics Rule, you enable 'Alert grouping' and select 'Group all alerts triggered by this rule into a single incident'. When is this setting most appropriate?",
+    "options": [
+      "A. When every single row returned by the query represents an unrelated critical ransomware infection.",
+      "B. When the rule uses a Fusion template.",
+      "C. When a rule detects a noisy brute-force or port scan burst and you want to prevent alert fatigue by consolidating multiple triggers into one incident.",
+      "D. When you want to disable incident creation entirely."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "Grouping alerts into a single incident consolidates repetitive triggers from the same rule, preventing SOC queue flooding."
+  },
+  {
+    "id": 20,
+    "domain": "Microsoft Sentinel",
+    "type": "multiple",
+    "question": "You are optimizing a slow Scheduled Analytics Rule that scans high-volume tables in Microsoft Sentinel. Which two KQL query optimization techniques will most effectively reduce execution time and memory consumption? (Select two.)",
+    "options": [
+      "A. Convert all numeric columns to strings using tostring().",
+      "B. Use summarize or project early to reduce row and column counts prior to joining tables.",
+      "C. Apply TimeGenerated and exact-match (== or has) filters at the very beginning of the query before joins or regex operations.",
+      "D. Replace == operators with case-insensitive regular expressions (matches regex).",
+      "E. Perform fullouter joins across 90 days of raw telemetry before filtering."
+    ],
+    "correctAnswers": [
+      1,
+      2
+    ],
+    "explanation": "Filtering early on indexed columns and projecting only required fields minimizes data scanned and shuffled during query execution."
+  },
+  {
+    "id": 21,
+    "domain": "Microsoft Sentinel",
+    "type": "single",
+    "question": "You need to ingest DNS analytic and audit logs from on-premises Windows DNS servers into Microsoft Sentinel without collecting standard Windows Security Events on those servers. Which connector should you use?",
+    "options": [
+      "A. Office 365",
+      "B. Windows Security Events via AMA",
+      "C. Common Event Format (CEF) via AMA",
+      "D. Windows DNS Events via AMA"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "The Windows DNS Events via AMA connector uses a specialized DCR to collect DNS analytical/audit events into the DnsEvents table."
+  },
+  {
+    "id": 22,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You are configuring Microsoft Defender XDR unified RBAC. You want a SOC analyst to view alerts and incidents across Defender for Endpoint and Defender for Office 365, but restrict their endpoint visibility strictly to workstations in the 'Finance' device group. Which feature controls this scope?",
+    "options": [
+      "A. Device Groups paired with custom RBAC roles in Microsoft Defender XDR.",
+      "B. Azure Storage Access Tiers.",
+      "C. Conditional Access Named Locations.",
+      "D. Microsoft Sentinel Watchlists."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Defender for Endpoint Device Groups map to custom RBAC roles to restrict analyst visibility and remediation permissions to specific machine subsets."
+  },
+  {
+    "id": 23,
+    "domain": "Microsoft Defender XDR",
+    "type": "multiple",
+    "question": "During a threat hunt in Microsoft Defender XDR, you discover a suspicious executable hash and want to check its global prevalence and see every endpoint in your organization where the file was written or executed. Which two Advanced Hunting tables/functions should you use? (Select two.)",
+    "options": [
+      "A. UrlClickEvents.",
+      "B. FileProfile() enrichment function (to retrieve global and organizational file prevalence).",
+      "C. EmailPostDeliveryEvents.",
+      "D. AzureActivity.",
+      "E. DeviceFileEvents and DeviceProcessEvents (filtered by SHA1 or SHA256)."
+    ],
+    "correctAnswers": [
+      1,
+      4
+    ],
+    "explanation": "FileProfile() provides global prevalence metrics, while DeviceFileEvents and DeviceProcessEvents locate local file creation and execution."
+  },
+  {
+    "id": 24,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "An attacker compromises a user's session cookie via an Adversary-in-the-Middle (AiTM) phishing proxy, bypassing MFA. Which Defender XDR capability automatically detects the anomalous session usage and revokes the user's Entra ID refresh tokens?",
+    "options": [
+      "A. Safe Attachments Dynamic Delivery",
+      "B. Automatic Attack Disruption",
+      "C. Windows Defender Firewall",
+      "D. Attack Surface Reduction (ASR) audit mode"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Automatic Attack Disruption correlates AiTM phishing signals with anomalous sign-in telemetry to disable or contain compromised accounts automatically."
+  },
+  {
+    "id": 25,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You are investigating an alert in Microsoft Defender for Identity: 'Suspected Kerberoasting activity'. Which protocol behavior is the sensor detecting?",
+    "options": [
+      "A. An external IP scanning TCP port 3389.",
+      "B. An administrator resetting the krbtgt account password twice.",
+      "C. A user account requesting Kerberos TGS tickets with RC4 encryption (etype 0x17) for multiple Service Principal Names (SPNs) in a short timeframe.",
+      "D. A workstation performing DNS zone transfers."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "Defender for Identity detects Kerberoasting by identifying abnormal bursts of TGS requests—especially downgraded RC4 tickets—targeting service accounts."
+  },
+  {
+    "id": 26,
+    "domain": "Microsoft Defender XDR",
+    "type": "multiple",
+    "question": "You want to deploy Attack Surface Reduction (ASR) rules to Windows 11 endpoints without risking business application breakage on day one. Which two steps represent Microsoft's recommended deployment methodology? (Select two.)",
+    "options": [
+      "A. Uninstall Microsoft Defender Antivirus before applying Intune ASR policies.",
+      "B. Disable cloud-delivered protection while testing ASR rules.",
+      "C. Configure the ASR rules in Audit mode first and monitor telemetry in the Attack Surface Reduction reports or DeviceEvents table.",
+      "D. Enable all ASR rules immediately in Block mode on Domain Controllers.",
+      "E. Define file and folder exclusions for verified line-of-business applications before switching rules to Block mode."
+    ],
+    "correctAnswers": [
+      2,
+      4
+    ],
+    "explanation": "Microsoft recommends deploying ASR rules in Audit mode to identify legitimate software impacts, adding targeted exclusions, and transitioning to Block mode."
+  },
+  {
+    "id": 27,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "In Microsoft Defender for Office 365, a user clicks a URL in an email, and Safe Links blocks access. However, the user claims the website is a legitimate partner portal. Where do you verify why the URL was blocked and submit it to Microsoft for false-positive review?",
+    "options": [
+      "A. Microsoft Sentinel > Watchlists.",
+      "B. Azure Active Directory > App registrations.",
+      "C. Endpoints > Device inventory.",
+      "D. Actions & submissions > Submissions in the Microsoft Defender portal."
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "The Submissions page lets administrators analyze blocked URLs/emails, submit false positives to Microsoft, and create temporary allow entries."
+  },
+  {
+    "id": 28,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You are analyzing a suspicious executable in Microsoft Defender for Endpoint. You open the file's entity page and trigger 'Deep analysis'. What occurs when you submit a file for Deep analysis?",
+    "options": [
+      "A. Defender for Endpoint detonates the executable inside a secure cloud sandbox and returns behavioral, network, and registry telemetry.",
+      "B. Live Response opens an interactive shell on the endpoint.",
+      "C. The file is automatically deleted from all endpoints globally.",
+      "D. The file is uploaded to a public malware repository."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Deep analysis executes suspicious files in an isolated cloud sandbox environment to observe runtime behaviors."
+  },
+  {
+    "id": 29,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Examine the following Advanced Hunting query:<pre><code>DeviceProcessEvents\n| where Timestamp > ago(24h)\n| where FileName in~ (\"rundll32.exe\", \"regsvr32.exe\", \"mshta.exe\")\n| where ProcessCommandLine has_any (\"http://\", \"https://\")\n| project Timestamp, DeviceName, FileName, ProcessCommandLine, AccountName</code></pre>What security threat pattern is this query designed to detect?",
+    "options": [
+      "A. BitLocker recovery key extraction.",
+      "B. Living-off-the-Land Binaries (LOLBins) executing remote payloads directly from external URLs.",
+      "C. Local password spraying via SMB.",
+      "D. Unauthorized USB storage device insertion."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Abusing signed Windows binaries (LOLBins) like mshta, rundll32, or regsvr32 with remote HTTP/HTTPS arguments is a proxy execution technique."
+  },
+  {
+    "id": 30,
+    "domain": "Microsoft Defender XDR",
+    "type": "multiple",
+    "question": "Your organization uses Microsoft Defender for Cloud Apps and wants to continuously discover shadow IT usage and block employees from uploading corporate data to unsanctioned cloud storage sites. Which two configurations accomplish this? (Select two.)",
+    "options": [
+      "A. Configure Safe Attachments in Dynamic Delivery mode.",
+      "B. Deploy Azure Bastion on all virtual networks.",
+      "C. Enable Microsoft Defender for Endpoint integration in Defender for Cloud Apps settings for continuous network telemetry.",
+      "D. Mark the risky cloud storage applications as 'Unsanctioned' to enforce automatic network blocking via Defender for Endpoint.",
+      "E. Disable Network Protection on Windows endpoints."
+    ],
+    "correctAnswers": [
+      2,
+      3
+    ],
+    "explanation": "Defender for Endpoint streams continuous Cloud Discovery traffic signals and enforces blocks against apps tagged as Unsanctioned."
+  },
+  {
+    "id": 31,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Which Advanced Hunting table records post-delivery email remediation events, such as Zero-hour Auto Purge (ZAP) moving a newly weaponized message to Junk or Quarantine?",
+    "options": [
+      "A. DeviceEvents",
+      "B. IdentityDirectoryEvents",
+      "C. EmailPostDeliveryEvents",
+      "D. EmailEvents"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "EmailPostDeliveryEvents tracks security actions taken on messages after initial delivery, including ZAP actions and manual purges."
+  },
+  {
+    "id": 32,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You want to prevent users from copying sensitive customer data out of managed Microsoft 365 apps onto unmanaged personal devices on Windows endpoints. Which Defender for Endpoint capability enforces sensitivity-based data loss prevention at the device level?",
+    "options": [
+      "A. Credential Guard.",
+      "B. Network Protection in Audit mode.",
+      "C. Controlled Folder Access.",
+      "D. Microsoft Purview Endpoint Data Loss Prevention (Endpoint DLP) integrated with Defender for Endpoint."
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "Endpoint DLP leverages the built-in Defender for Endpoint sensor on Windows devices to monitor and restrict sensitive file actions."
+  },
+  {
+    "id": 33,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "In KQL, you want to join <code>IdentityLogonEvents</code> with <code>DeviceInfo</code> to enrich user logon events with OS platform details, ensuring that all logon events are preserved even if the source device is unmanaged and absent from <code>DeviceInfo</code>. Which join flavor should you use?",
+    "options": [
+      "A. kind=leftouter",
+      "B. kind=innerunique",
+      "C. kind=rightanti",
+      "D. kind=inner"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "A leftouter join returns all records from the left table and matching records from the right table, filling nulls when no match exists."
+  },
+  {
+    "id": 34,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You are investigating an alert in Microsoft Defender for Identity: 'Suspected golden ticket usage'. What remediation action is strictly required after evicting the attacker from the network?",
+    "options": [
+      "A. Reinstall the Defender for Identity sensor on member servers.",
+      "B. Reset the password of the Active Directory krbtgt account twice, waiting at least 10 hours between resets.",
+      "C. Disable all DNS servers in the forest.",
+      "D. Enable NTLMv1 across all Domain Controllers."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Because Active Directory retains the current and previous krbtgt password hashes, resetting krbtgt twice invalidates forged Golden Tickets."
+  },
+  {
+    "id": 35,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Which Defender for Endpoint feature isolates malicious processes and blocks unauthorized applications from modifying files in protected system and user folders (such as Documents and Desktop) to mitigate ransomware?",
+    "options": [
+      "A. SmartScreen",
+      "B. Windows Hello for Business",
+      "C. Controlled Folder Access",
+      "D. BitLocker Drive Encryption"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "Controlled Folder Access restricts file modifications in designated folders exclusively to trusted, allowlisted applications."
+  },
+  {
+    "id": 36,
+    "domain": "Microsoft Defender XDR",
+    "type": "multiple",
+    "question": "You are reviewing security metrics in Microsoft Defender Vulnerability Management. Which two statements accurately describe the Exposure Score and Microsoft Secure Score for Devices? (Select two.)",
+    "options": [
+      "A. Secure Score for Devices increases when Tamper Protection is disabled.",
+      "B. A higher Exposure Score means your endpoints are completely patched.",
+      "C. A lower Exposure Score indicates lower organizational risk of vulnerability exploitation.",
+      "D. Both scores only evaluate Linux servers.",
+      "E. A higher Microsoft Secure Score for Devices indicates stronger endpoint security configuration posture."
+    ],
+    "correctAnswers": [
+      2,
+      4
+    ],
+    "explanation": "Exposure Score measures vulnerability risk (lower is better), while Secure Score for Devices measures hardening posture (higher is better)."
+  },
+  {
+    "id": 37,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You need to investigate active network connections and running services on an isolated macOS workstation onboarded to Microsoft Defender for Endpoint. Which capability allows an analyst to run diagnostic commands remotely on macOS?",
+    "options": [
+      "A. Windows Event Collector",
+      "B. Azure Serial Console",
+      "C. PowerShell Remoting (WinRM)",
+      "D. Live Response for macOS"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "Live Response supports macOS endpoints, providing a remote shell to inspect processes, collect files, and execute remediation scripts."
+  },
+  {
+    "id": 38,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Look at the following Advanced Hunting query:<pre><code>DeviceNetworkEvents\n| where Timestamp > ago(1h)\n| where RemotePort == 445\n| summarize TargetCount = dcount(RemoteIP) by DeviceName\n| where TargetCount > 15</code></pre>What attacker phase does this query help uncover?",
+    "options": [
+      "A. Lateral movement or SMB network reconnaissance scanning across internal hosts.",
+      "B. Office 365 mailbox forwarding rule creation.",
+      "C. External phishing email delivery.",
+      "D. Cloud storage SAS token leakage."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "A single host initiating SMB (port 445) connections to more than 15 distinct IP addresses within an hour indicates lateral movement or scanning."
+  },
+  {
+    "id": 39,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Your organization wants to ensure that every email attachment is opened in an isolated virtualized container until detonation completes, without delaying email delivery to the user's inbox. Which Safe Attachments action should you select?",
+    "options": [
+      "A. Replace",
+      "B. Dynamic Delivery",
+      "C. Block",
+      "D. Monitor"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Dynamic Delivery delivers the email body immediately with a placeholder attachment while sandbox scanning finishes in the background."
+  },
+  {
+    "id": 40,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Which Advanced Hunting table logs changes to Active Directory user groups, password resets, and suspicious LDAP queries observed by Microsoft Defender for Identity?",
+    "options": [
+      "A. DeviceRegistryEvents",
+      "B. UrlClickEvents",
+      "C. IdentityDirectoryEvents",
+      "D. AlertEvidence"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "IdentityDirectoryEvents captures on-premises Active Directory object modifications, group membership changes, and directory queries."
+  },
+  {
+    "id": 41,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You are analyzing an incident in Microsoft Defender XDR and want to see all artifacts (files, IPs, URLs, accounts) associated with a specific AlertId. Which Advanced Hunting table maps alerts to their underlying entities?",
+    "options": [
+      "A. AlertInfo",
+      "B. BehaviorInfo",
+      "C. DeviceInfo",
+      "D. AlertEvidence"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "AlertEvidence stores every entity and artifact linked to alerts in Microsoft Defender XDR, while AlertInfo contains high-level alert metadata."
+  },
+  {
+    "id": 42,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "A SOC analyst notices that multiple users clicked a malicious link in an email before Safe Links updated its threat intelligence. Which Advanced Hunting table allows the analyst to identify every user who clicked the URL and whether the click was allowed or blocked?",
+    "options": [
+      "A. UrlClickEvents",
+      "B. EmailUrlInfo",
+      "C. IdentityQueryEvents",
+      "D. DeviceNetworkEvents"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "UrlClickEvents logs Safe Links click telemetry across email and Office apps, including ActionType verdicts."
+  },
+  {
+    "id": 43,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You want to restrict a compromised Windows endpoint so that only applications signed by Microsoft or explicitly approved by your organization can execute, while blocking all other binaries. Which Defender for Endpoint response action should you initiate?",
+    "options": [
+      "A. Run antivirus scan",
+      "B. Restrict app execution",
+      "C. Offboard device",
+      "D. Collect investigation package"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "'Restrict app execution' applies a Windows Defender Application Control (WDAC) code integrity policy to block untrusted binaries."
+  },
+  {
+    "id": 44,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "In Microsoft Defender for Cloud Apps, you want to automatically apply a Microsoft Purview sensitivity label ('Confidential') to any file uploaded to Box or SharePoint that contains credit card numbers. Which policy type accomplishes this?",
+    "options": [
+      "A. Session policy",
+      "B. Cloud Discovery anomaly policy",
+      "C. File policy",
+      "D. Access policy"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "File policies scan cloud repository files via API connectors for DLP patterns and apply sensitivity labels or quarantine actions."
+  },
+  {
+    "id": 45,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "You are investigating a suspected Pass-the-Hash (PtH) attack detected by Microsoft Defender for Identity. Which authentication protocol is inherently vulnerable to Pass-the-Hash?",
+    "options": [
+      "A. FIDO2 WebAuthn",
+      "B. OAuth 2.0 Authorization Code with PKCE",
+      "C. Kerberos PKINIT",
+      "D. NTLM"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "NTLM challenge-response authentication uses the user's NTLM password hash directly without requiring the plaintext password."
+  },
+  {
+    "id": 46,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "In KQL, you want to inspect the chronological sequence of events for a specific user session by sorting rows by <code>Timestamp</code> ascending and calculating the time difference between consecutive rows. Which KQL function calculates the value of a column in a previous row?",
+    "options": [
+      "A. prev()",
+      "B. bin()",
+      "C. next()",
+      "D. ago()"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "The prev() window function retrieves a column value from a preceding row in a serialized dataset."
+  },
+  {
+    "id": 47,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Your organization wants to automatically block newly observed, suspicious executable files at first sight before a traditional signature update is published. Which Microsoft Defender Antivirus feature enables real-time cloud-based machine learning verdict blocking?",
+    "options": [
+      "A. Windows Defender Firewall Domain Profile",
+      "B. Block at First Sight (with Cloud-delivered protection enabled)",
+      "C. Scheduled Weekly Quick Scan",
+      "D. Offline Scan"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Block at First Sight pauses unknown executable execution while the cloud backend returns an instant machine learning verdict."
+  },
+  {
+    "id": 48,
+    "domain": "Microsoft Defender XDR",
+    "type": "single",
+    "question": "Which Advanced Hunting table provides information about Windows Registry modifications, including registry key paths, value names, and previous vs. new value data?",
+    "options": [
+      "A. DeviceImageLoadEvents",
+      "B. DeviceFileEvents",
+      "C. DeviceRegistryEvents",
+      "D. DeviceProcessEvents"
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "DeviceRegistryEvents records creation, modification, and deletion of registry keys and values on onboarded endpoints."
+  },
+  {
+    "id": 49,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "multiple",
+    "question": "Your organization deploys virtual machines across Azure, AWS, and Google Cloud Platform (GCP). You want to onboard AWS EC2 and GCP Compute Engine instances into Microsoft Defender for Servers with full EDR protection. Which two steps are required? (Select two.)",
+    "options": [
+      "A. Install the legacy Microsoft Monitoring Agent (MMA) manually on every EC2 instance.",
+      "B. Deploy the Azure Arc Connected Machine agent (via auto-provisioning) to onboard non-Azure VMs and install the MDE extension.",
+      "C. Connect the AWS account and GCP project to Microsoft Defender for Cloud using native multi-cloud connectors.",
+      "D. Configure Exchange Online mail flow rules for AWS.",
+      "E. Convert all Linux instances to Windows Server 2012."
+    ],
+    "correctAnswers": [
+      1,
+      2
+    ],
+    "explanation": "Multi-cloud connectors paired with Azure Arc auto-provisioning project AWS/GCP VMs into Azure and deploy Defender for Endpoint."
+  },
+  {
+    "id": 50,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "You want to ensure that newly pushed container images in an Azure Container Registry (ACR) are automatically scanned for OS and application vulnerabilities before deployment to AKS. Which Defender for Cloud plan provides continuous registry image scanning?",
+    "options": [
+      "A. Microsoft Defender for DNS",
+      "B. Microsoft Defender for Key Vault",
+      "C. Microsoft Defender for Storage",
+      "D. Microsoft Defender for Containers"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "Microsoft Defender for Containers scans container images on push, import, and continuously in registries like ACR, ECR, and GAR."
+  },
+  {
+    "id": 51,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "An alert in Defender for Cloud indicates: 'Anomalous access to Azure Key Vault' from a Tor exit node IP address. Which plan generated this threat detection alert?",
+    "options": [
+      "A. Microsoft Defender for Key Vault",
+      "B. Foundational CSPM",
+      "C. Microsoft Defender for App Service",
+      "D. Microsoft Defender for Open-Source Relational Databases"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Microsoft Defender for Key Vault monitors Key Vault access telemetry for anomalous IP origins, Tor nodes, and unusual secret enumeration."
+  },
+  {
+    "id": 52,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "Your security team wants to prevent developers from deploying virtual machines with public IP addresses or unencrypted OS disks in Azure subscriptions. Which Defender for Cloud / Azure governance mechanism enforces preventive 'Deny' guardrails?",
+    "options": [
+      "A. Microsoft Sentinel Workbooks.",
+      "B. Azure Policy assignments in Deny mode integrated with Defender for Cloud security initiatives.",
+      "C. Adaptive Application Controls in Audit mode.",
+      "D. Just-in-Time VM Access."
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Azure Policy definitions set to Deny effect block non-compliant resource deployments at creation time while feeding compliance posture."
+  },
+  {
+    "id": 53,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "You are investigating a Defender for Servers alert: 'Suspicious SVCHOST process executed'. Why does Defender for Servers flag abnormal <code>svchost.exe</code> executions?",
+    "options": [
+      "A. svchost.exe is never allowed to make network connections.",
+      "B. svchost.exe only runs on Linux servers.",
+      "C. Legitimate svchost.exe must reside in System32 and be spawned by services.exe; execution from other paths or parent processes indicates process masquerading.",
+      "D. svchost.exe is deprecated in Windows Server 2022."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "Attackers frequently masquerade malware as svchost.exe in non-standard directories or launch it from non-services.exe parents."
+  },
+  {
+    "id": 54,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "Which Defender for Cloud feature uses machine learning to analyze historical application execution patterns on a group of Azure VMs and generates allowlist recommendations to block unauthorized executables?",
+    "options": [
+      "A. Malware Scanning for Storage",
+      "B. DevOps Security",
+      "C. Adaptive Network Hardening",
+      "D. Adaptive Application Controls"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "Adaptive Application Controls profiles known-safe software on VM groups and alerts or blocks execution of unknown applications."
+  },
+  {
+    "id": 55,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "multiple",
+    "question": "Your organization connects its GitHub and Azure DevOps repositories to Microsoft Defender for Cloud DevOps Security. Which three security findings are aggregated into Defender for Cloud? (Select three.)",
+    "options": [
+      "A. Exposed plaintext secrets and credentials committed to source repositories.",
+      "B. On-premises Active Directory Group Policy objects.",
+      "C. Open-source software dependency vulnerabilities.",
+      "D. Exchange Online spam quarantine logs.",
+      "E. Infrastructure-as-Code (IaC) template misconfigurations (such as Terraform or Bicep).",
+      "F. Real-time endpoint keystrokes on developer laptops."
+    ],
+    "correctAnswers": [
+      0,
+      2,
+      4
+    ],
+    "explanation": "Defender for Cloud DevOps Security unifies IaC misconfigurations, exposed secrets, and code dependency vulnerabilities across repositories."
+  },
+  {
+    "id": 56,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "You want to export all Microsoft Defender for Cloud security alerts and recommendations continuously to an external third-party SIEM via an Azure Event Hub. Which feature in Defender for Cloud should you configure?",
+    "options": [
+      "A. Continuous export (under Environment settings)",
+      "B. Regulatory compliance export CSV",
+      "C. Just-in-Time VM access",
+      "D. Security alerts suppression rules"
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Continuous export streams Defender for Cloud alerts, recommendations, and secure score changes in real time to Event Hubs or Log Analytics."
+  },
+  {
+    "id": 57,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "An alert in Defender for Cloud states: 'Communication with a suspicious domain identified by threat intelligence' originating from an Azure VM's DNS queries. Which Defender plan detects malicious DNS resolution at the Azure network layer without requiring an endpoint agent?",
+    "options": [
+      "A. Microsoft Defender for Office 365",
+      "B. Microsoft Defender for DNS (included in Defender for Servers Plan 2 or standalone)",
+      "C. Microsoft Defender for Resource Manager",
+      "D. Microsoft Defender for SQL"
+    ],
+    "correctAnswers": [
+      1
+    ],
+    "explanation": "Microsoft Defender for DNS inspects Azure DNS queries against threat intelligence to detect C2 domains and DNS tunneling."
+  },
+  {
+    "id": 58,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "You are reviewing attack paths in Defender CSPM and notice a critical path labeled 'Internet exposed VM with high severity vulnerabilities has permissions to a Key Vault'. What is the fastest way to break this attack path?",
+    "options": [
+      "A. Disable Azure Monitor Agent on the VM.",
+      "B. Increase the Log Analytics retention period.",
+      "C. Remove the VM's public IP/restrict NSG inbound rules, patch the vulnerability, or apply least-privilege RBAC to the VM's managed identity.",
+      "D. Delete the Microsoft Sentinel workspace."
+    ],
+    "correctAnswers": [
+      2
+    ],
+    "explanation": "Attack paths are eliminated by remediating any link in the toxic combination—removing internet exposure, patching, or revoking excess permissions."
+  },
+  {
+    "id": 59,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "Which Defender for Cloud capability recommends hardening existing Network Security Group (NSG) rules by analyzing actual traffic patterns and threat intelligence to restrict overly permissive CIDR ranges?",
+    "options": [
+      "A. Azure Bastion",
+      "B. Guest Configuration baseline",
+      "C. File Integrity Monitoring",
+      "D. Adaptive Network Hardening (ANH)"
+    ],
+    "correctAnswers": [
+      3
+    ],
+    "explanation": "Adaptive Network Hardening evaluates observed network traffic against NSG rules and recommends tightening open ports and IP ranges."
+  },
+  {
+    "id": 60,
+    "domain": "Microsoft Defender for Cloud",
+    "type": "single",
+    "question": "You receive a Defender for Cloud alert: 'Access from an unusual location to a Storage Account'. Upon investigation, you confirm the access came from a newly provisioned corporate branch office static IP address. How should you prevent future false positives from this specific IP without disabling the alert rule globally?",
+    "options": [
+      "A. Create an alert suppression rule scoped to that specific alert name and IP address entity.",
+      "B. Remove all Azure Policy assignments.",
+      "C. Turn off Microsoft Defender for Storage across the entire subscription.",
+      "D. Delete the storage account."
+    ],
+    "correctAnswers": [
+      0
+    ],
+    "explanation": "Alert suppression rules dismiss known benign alerts matching specific entities while keeping the underlying detection active."
+  }
+]

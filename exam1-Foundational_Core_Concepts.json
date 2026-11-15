@@ -1,0 +1,978 @@
+[
+ {
+  "id": 1,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "You are a Security Operations Analyst at Contoso Ltd. In the Microsoft Defender portal, a single incident contains alerts from Defender for Endpoint, Defender for Office 365 and Defender for Identity. What is the purpose of this grouping?",
+  "options": [
+   "A. To correlate related alerts that belong to the same attack so they can be investigated together",
+   "B. To extend the retention period of alert data",
+   "C. To automatically close alerts after 24 hours",
+   "D. To reduce the licensing cost of each workload"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Defender XDR correlates alerts that share entities or attack stories into one incident so analysts see the full scope. Grouping has no effect on licensing, does not auto-close alerts and does not change retention. See Microsoft Learn: 'Incidents and alerts in the Microsoft Defender portal'."
+ },
+ {
+  "id": 2,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "A workstation is confirmed to be infected with ransomware. You must immediately stop it from communicating with other devices while keeping it manageable by Defender for Endpoint. Which response action should you use?",
+  "options": [
+   "A. Collect investigation package",
+   "B. Run antivirus scan",
+   "C. Isolate device",
+   "D. Offboard device"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "Isolate device cuts network connectivity but keeps the Defender for Endpoint cloud channel for further response. The investigation package only collects forensic data, a scan does not stop communication, and offboarding removes the device from management. See Microsoft Learn: 'Take response actions on a device'."
+ },
+ {
+  "id": 3,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "What does the project operator do in the following advanced hunting query?\n<pre><code>DeviceProcessEvents\n| where Timestamp > ago(1d)\n| where FileName =~ 'cmd.exe'\n| project Timestamp, DeviceName, ProcessCommandLine</code></pre>",
+  "options": [
+   "A. It returns only the listed columns",
+   "B. It adds a calculated column",
+   "C. It sorts the results by Timestamp",
+   "D. It filters rows to the last day"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "project selects (and orders) the columns in the output. Filtering by time and file name is done by the where operators, a calculated column needs extend, and sorting needs order by. See Microsoft Learn: 'project operator'."
+ },
+ {
+  "id": 4,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "You need to find delivered emails and their senders. Which table replaces <TableName>?\n<pre><code><TableName>\n| where DeliveryAction == 'Delivered'\n| project Timestamp, SenderFromAddress, RecipientEmailAddress, Subject</code></pre>",
+  "options": [
+   "A. EmailEvents",
+   "B. IdentityLogonEvents",
+   "C. CloudAppEvents",
+   "D. DeviceEvents"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "EmailEvents holds message-level data such as sender, recipient, subject and DeliveryAction. DeviceEvents covers endpoint events, IdentityLogonEvents covers authentication events, and CloudAppEvents covers cloud app activity. See Microsoft Learn: 'EmailEvents table in advanced hunting'."
+ },
+ {
+  "id": 5,
+  "domain": "Microsoft Defender XDR",
+  "type": "multiple",
+  "question": "On which two server roles can you install the Defender for Identity sensor? Select two.",
+  "options": [
+   "A. AD FS servers",
+   "B. Member workstations",
+   "C. Azure Blob storage",
+   "D. Exchange Online mailboxes",
+   "E. Domain controllers"
+  ],
+  "correctAnswers": [
+   0,
+   4
+  ],
+  "explanation": "Sensors run on domain controllers and supported AD FS servers (also AD CS and Entra Connect). Exchange Online, workstations and storage are not sensor hosts. See Microsoft Learn: 'Defender for Identity prerequisites'."
+ },
+ {
+  "id": 6,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Users click URLs in emails that were clean at delivery and became malicious later. Which Defender for Office 365 feature checks URLs at the time of click?",
+  "options": [
+   "A. Mail flow rule",
+   "B. Anti-spam policy",
+   "C. Safe Attachments",
+   "D. Safe Links"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Safe Links rewrites and re-evaluates URLs when users click them. Safe Attachments detonates files, anti-spam scores messages at delivery, and mail flow rules apply static conditions. See Microsoft Learn: 'Safe Links in Defender for Office 365'."
+ },
+ {
+  "id": 7,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "You want to discover which unsanctioned SaaS apps employees use, based on firewall and proxy logs. Which Defender for Cloud Apps capability should you use?",
+  "options": [
+   "A. Cloud Discovery",
+   "B. File policies",
+   "C. Anomaly detection policies",
+   "D. Conditional Access App Control session policies"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Cloud Discovery analyzes traffic logs to reveal shadow IT. Session control governs sessions in sanctioned apps, file policies scan stored files, and anomaly detection flags unusual user behavior. See Microsoft Learn: 'Set up Cloud Discovery'."
+ },
+ {
+  "id": 8,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "An automated investigation finishes and remediation actions are waiting for approval. Where do you approve them?",
+  "options": [
+   "A. Action center",
+   "B. Advanced hunting",
+   "C. Threat analytics",
+   "D. Secure score page"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Pending and completed remediation actions are managed in the Action center. Secure score shows posture, Threat analytics describes threats, and advanced hunting is for queries. See Microsoft Learn: 'Action center'."
+ },
+ {
+  "id": 9,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "You want to know whether your organization is exposed to a newly reported threat campaign, and see recommended mitigations. Where should you look?",
+  "options": [
+   "A. Secure score",
+   "B. Cloud Discovery",
+   "C. Threat analytics",
+   "D. Live response"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "Threat analytics gives analyst reports with impacted assets, exposure and mitigations. Secure score and Cloud Discovery do not track specific campaigns, and live response is for endpoint sessions. See Microsoft Learn: 'Threat analytics in Microsoft Defender XDR'."
+ },
+ {
+  "id": 10,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Before enforcing a new attack surface reduction (ASR) rule across the company, you want to see its impact without blocking anything. Which mode should you use?",
+  "options": [
+   "A. Audit",
+   "B. Disabled",
+   "C. Block",
+   "D. Passive mode"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Audit mode logs what would have been blocked. Block enforces the rule, Disabled does nothing, and passive mode refers to Defender Antivirus, not ASR rules. See Microsoft Learn: 'Attack surface reduction rules deployment'."
+ },
+ {
+  "id": 11,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Which Defender for Endpoint feature prevents malware or users from disabling real-time protection through PowerShell or the registry?",
+  "options": [
+   "A. Controlled folder access",
+   "B. Microsoft Defender SmartScreen",
+   "C. Tamper protection",
+   "D. Network protection"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "Tamper protection locks critical security settings against unauthorized changes. Network protection blocks bad destinations, Controlled folder access protects folders from ransomware, and SmartScreen checks URLs and downloads. See Microsoft Learn: 'Protect security settings with tamper protection'."
+ },
+ {
+  "id": 12,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Regional SOC teams must see only alerts for devices in their own region. Which Defender for Endpoint feature scopes access to specific devices?",
+  "options": [
+   "A. Device groups combined with role-based access control",
+   "B. File indicators",
+   "C. Alert suppression rules",
+   "D. Custom detection rules"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Device groups define sets of devices, and RBAC roles are assigned to groups so analysts see only their scope. Suppression rules hide alerts, custom detections create alerts, and indicators allow or block entities. See Microsoft Learn: 'Create and manage device groups'."
+ },
+ {
+  "id": 13,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "During a live response session you need to download a suspicious file from the endpoint for analysis. Which command should you use?",
+  "options": [
+   "A. run",
+   "B. getfile",
+   "C. cd",
+   "D. putfile"
+  ],
+  "correctAnswers": [
+   1
+  ],
+  "explanation": "getfile downloads a file from the device. putfile uploads a file to the device, run executes a library script, and cd only changes directory. See Microsoft Learn: 'Live response command examples'."
+ },
+ {
+  "id": 14,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "You must block a known-malicious file hash on all onboarded devices. What should you create?",
+  "options": [
+   "A. A file hash indicator with the Block and remediate action",
+   "B. An IP address indicator with the Allow action",
+   "C. A certificate indicator with the Allow action",
+   "D. An ASR exclusion for the file"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "A file indicator set to block and remediate prevents execution and quarantines the file. Allow indicators and ASR exclusions permit the file instead. See Microsoft Learn: 'Create indicators for files'."
+ },
+ {
+  "id": 15,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "A junior analyst must view incidents and alerts but must not take response actions. Which Microsoft Entra role should you assign?",
+  "options": [
+   "A. Security Administrator",
+   "B. Compliance Administrator",
+   "C. Security Operator",
+   "D. Security Reader"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Security Reader grants read-only access to security data. Security Operator can manage incidents and alerts, Security Administrator can configure settings, and Compliance Administrator targets compliance features. See Microsoft Learn: 'Roles and permissions in Microsoft Defender XDR'."
+ },
+ {
+  "id": 16,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "You want to test whether users fall for credential-harvest phishing and automatically assign training. Which feature should you use?",
+  "options": [
+   "A. Quarantine policy",
+   "B. Anti-malware policy",
+   "C. Safe Links policy",
+   "D. Attack simulation training in Defender for Office 365 Plan 2"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Attack simulation training sends simulated phishing and assigns training to users who fail. The other policies protect mail flow but do not run simulations. See Microsoft Learn: 'Get started using Attack simulation training'."
+ },
+ {
+  "id": 17,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Defender Vulnerability Management recommends updating a browser. You want IT to be notified so they can remediate on the affected devices. What should you do?",
+  "options": [
+   "A. Create a remediation request from the security recommendation",
+   "B. Create an exception for the recommendation",
+   "C. Create a file indicator for the browser",
+   "D. Isolate the affected devices"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "A remediation request creates a task (for example in Intune) for IT. An exception accepts the risk, isolation disrupts users, and a file indicator would block the browser rather than update it. See Microsoft Learn: 'Remediate vulnerabilities'."
+ },
+ {
+  "id": 18,
+  "domain": "Microsoft Defender XDR",
+  "type": "multiple",
+  "question": "Which two statements about incidents in the Microsoft Defender portal are true? Select two.",
+  "options": [
+   "A. An analyst can be assigned to an incident and its status can be set",
+   "B. Incidents can only be created manually",
+   "C. An incident can contain only one alert",
+   "D. Incidents are deleted automatically when classified",
+   "E. An incident can contain alerts from multiple Defender products"
+  ],
+  "correctAnswers": [
+   0,
+   4
+  ],
+  "explanation": "Incidents merge correlated alerts across workloads and support assignment, status and classification. They are not deleted on classification, can hold many alerts and are created automatically. See Microsoft Learn: 'Manage incidents in Microsoft Defender'."
+ },
+ {
+  "id": 19,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Which capability detects sign-ins from anonymous IP addresses such as Tor and raises a risky sign-in?",
+  "options": [
+   "A. Safe Links",
+   "B. Live response",
+   "C. Attack surface reduction rules",
+   "D. Microsoft Entra ID Protection risk detections"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Entra ID Protection evaluates sign-ins for risk, including anonymous IP usage. ASR, Safe Links and live response do not evaluate sign-in risk. See Microsoft Learn: 'What is Microsoft Entra ID Protection?'."
+ },
+ {
+  "id": 20,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "What does the following query return?\n<pre><code>DeviceProcessEvents\n| where Timestamp > ago(7d)\n| summarize Count = count() by FileName\n| top 10 by Count desc</code></pre>",
+  "options": [
+   "A. The 10 most recent process events",
+   "B. The first 10 file names alphabetically",
+   "C. The 10 most frequently executed process file names in the last 7 days",
+   "D. The 10 devices with the most alerts"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "summarize counts executions per file name and top 10 by Count desc keeps the highest counts. It does not sort by time, by alerts or by name. See Microsoft Learn: 'top operator'."
+ },
+ {
+  "id": 21,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Which statement describes the result of this query?\n<pre><code>EmailEvents\n| where Subject has 'invoice'\n| where DeliveryAction == 'Delivered'</code></pre>",
+  "options": [
+   "A. Delivered emails whose subject contains the term invoice",
+   "B. All blocked emails that contain invoice",
+   "C. Emails sent by a user named invoice",
+   "D. A count of invoice emails"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "has matches the term in the Subject and DeliveryAction filters to delivered messages. The query filters rows, does not count and does not examine the sender. See Microsoft Learn: 'has operator'."
+ },
+ {
+  "id": 22,
+  "domain": "Microsoft Defender XDR",
+  "type": "multiple",
+  "question": "Which two filters return only rows whose ProcessCommandLine contains the term powershell? Select two.",
+  "options": [
+   "A. | project ProcessCommandLine",
+   "B. | where ProcessCommandLine contains 'powershell'",
+   "C. | where ProcessCommandLine has 'powershell'",
+   "D. | summarize count() by ProcessCommandLine",
+   "E. | extend Cmd = ProcessCommandLine"
+  ],
+  "correctAnswers": [
+   1,
+   2
+  ],
+  "explanation": "has and contains are where filters on text; has matches terms and is faster, contains matches substrings. project, summarize and extend do not filter rows. See Microsoft Learn: 'String operators'."
+ },
+ {
+  "id": 23,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "You need rows from two tables that have a match in both. Which join kind completes the query?\n<pre><code>DeviceInfo\n| join kind=<MISSING> DeviceNetworkEvents on DeviceId</code></pre>",
+  "options": [
+   "A. leftanti",
+   "B. fullouter",
+   "C. inner",
+   "D. leftouter"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "inner returns only matching rows. leftanti returns left rows without a match, leftouter keeps all left rows, and fullouter keeps all rows from both. See Microsoft Learn: 'join operator'."
+ },
+ {
+  "id": 24,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "After investigating an alert caused by an authorized penetration test, how should you classify it?",
+  "options": [
+   "A. True positive - malicious activity",
+   "B. False positive",
+   "C. Leave the classification unset",
+   "D. Informational, expected activity"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "The activity is real but expected, so it is classified as informational/expected activity. It is not malicious, and it is not a false detection. Unset classification hurts reporting and tuning. See Microsoft Learn: 'Manage incidents'."
+ },
+ {
+  "id": 25,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "Which table lists alerts with their severity and title? Complete the query:\n<pre><code><TableName>\n| where Severity == 'High'\n| project Timestamp, Title</code></pre>",
+  "options": [
+   "A. AlertInfo",
+   "B. AlertEvidence",
+   "C. EmailAttachmentInfo",
+   "D. DeviceInfo"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "AlertInfo has one row per alert with Title and Severity. AlertEvidence contains the entities of alerts, DeviceInfo describes devices, and EmailAttachmentInfo describes attachments. See Microsoft Learn: 'AlertInfo table'."
+ },
+ {
+  "id": 26,
+  "domain": "Microsoft Defender XDR",
+  "type": "multiple",
+  "question": "Which two device actions can a custom detection rule take automatically when its query matches? Select two.",
+  "options": [
+   "A. Run antivirus scan",
+   "B. Delete a Sentinel workbook",
+   "C. Create a mail flow rule",
+   "D. Assign a Conditional Access policy",
+   "E. Isolate device"
+  ],
+  "correctAnswers": [
+   0,
+   4
+  ],
+  "explanation": "Custom detections support device actions such as isolate, run antivirus scan, collect investigation package and restrict app execution. Mail flow rules, Conditional Access and workbooks are managed elsewhere. See Microsoft Learn: 'Custom detection rules'."
+ },
+ {
+  "id": 27,
+  "domain": "Microsoft Defender XDR",
+  "type": "single",
+  "question": "What does zero-hour auto purge (ZAP) do?",
+  "options": [
+   "A. It encrypts outbound mail",
+   "B. It scans USB drives",
+   "C. It retroactively detects and neutralizes malicious messages already delivered to mailboxes",
+   "D. It blocks malicious IPs at the corporate firewall"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "ZAP acts after delivery when new verdicts arrive, moving or removing the message. It is not a firewall, encryption or USB feature. See Microsoft Learn: 'Zero-hour auto purge in Exchange Online'."
+ },
+ {
+  "id": 28,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "Which Defender for Cloud capability provides security recommendations and secure score to improve your posture?",
+  "options": [
+   "A. Azure Cost Management",
+   "B. Azure Monitor metrics",
+   "C. Cloud security posture management (CSPM)",
+   "D. Cloud workload protection plans"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "CSPM identifies misconfigurations and produces secure score. Workload protection plans detect threats at runtime, and Monitor and Cost Management do not assess security posture. See Microsoft Learn: 'What is Microsoft Defender for Cloud?'."
+ },
+ {
+  "id": 29,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "multiple",
+  "question": "Which two are cloud security posture management (CSPM) capabilities of Defender for Cloud? Select two.",
+  "options": [
+   "A. Malware scanning of uploaded blobs",
+   "B. Security recommendations with secure score",
+   "C. Regulatory compliance assessment",
+   "D. Endpoint detection and response on VMs",
+   "E. Runtime threat alerts for containers"
+  ],
+  "correctAnswers": [
+   1,
+   2
+  ],
+  "explanation": "CSPM assesses configuration through recommendations, secure score and compliance views. Runtime alerts, blob malware scanning and EDR are workload protection capabilities. See Microsoft Learn: 'Cloud security posture management in Defender for Cloud'."
+ },
+ {
+  "id": 30,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "You want Azure VMs to receive endpoint detection and response from Defender for Endpoint through Defender for Cloud. Which plan should you enable?",
+  "options": [
+   "A. Defender for App Service",
+   "B. Defender for Storage",
+   "C. Defender for Key Vault",
+   "D. Defender for Servers"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Defender for Servers integrates with Defender for Endpoint. The other plans protect storage, Key Vault and App Service. See Microsoft Learn: 'Defender for Servers overview'."
+ },
+ {
+  "id": 31,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "Which Azure Policy effect used by a Defender for Cloud recommendation prevents the creation of non-compliant resources?",
+  "options": [
+   "A. Audit",
+   "B. AuditIfNotExists",
+   "C. Deny",
+   "D. Disabled"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "Deny blocks non-compliant deployments. Audit and AuditIfNotExists only report, and Disabled turns the policy off. See Microsoft Learn: 'Prevent misconfigurations with Enforce/Deny recommendations'."
+ },
+ {
+  "id": 32,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "Which Defender for Cloud dashboard shows how your resources align with standards such as the Microsoft cloud security benchmark?",
+  "options": [
+   "A. Regulatory compliance",
+   "B. Workload protections",
+   "C. Cost analysis",
+   "D. Inventory"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "The regulatory compliance dashboard maps controls to assessed resources. Workload protections shows plan coverage, Inventory lists resources, and cost analysis is a billing view. See Microsoft Learn: 'Regulatory compliance in Defender for Cloud'."
+ },
+ {
+  "id": 33,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "Which plan alerts on unusual access patterns to Azure Storage accounts, such as access from anonymous sources?",
+  "options": [
+   "A. Defender for Containers",
+   "B. Defender for App Service",
+   "C. Defender for Servers",
+   "D. Defender for Storage"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Defender for Storage analyzes storage telemetry for suspicious activity. The other plans protect VMs, containers and web apps. See Microsoft Learn: 'Microsoft Defender for Storage'."
+ },
+ {
+  "id": 34,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "You want to expose management ports of VMs only when someone requests access. Which feature should you use?",
+  "options": [
+   "A. Azure Update Manager",
+   "B. Just-in-time VM access",
+   "C. Azure Backup",
+   "D. Azure Disk Encryption"
+  ],
+  "correctAnswers": [
+   1
+  ],
+  "explanation": "JIT keeps ports closed and opens them temporarily on approved requests. Backup, disk encryption and update management do not control port exposure. See Microsoft Learn: 'Just-in-time VM access'."
+ },
+ {
+  "id": 35,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "multiple",
+  "question": "Which two resource types does Defender for Containers protect? Select two.",
+  "options": [
+   "A. Key Vault secrets",
+   "B. Azure Container Registry images",
+   "C. Azure SQL databases",
+   "D. Azure Kubernetes Service clusters",
+   "E. Storage account blobs"
+  ],
+  "correctAnswers": [
+   1,
+   3
+  ],
+  "explanation": "Defender for Containers covers clusters and registry images. SQL, storage and Key Vault have their own plans. See Microsoft Learn: 'Defender for Containers introduction'."
+ },
+ {
+  "id": 36,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "What does this Azure Resource Graph query return?\n<pre><code>securityresources\n| where type == 'microsoft.security/assessments'\n| where properties.status.code == 'Unhealthy'\n| summarize UnhealthyCount = count()</code></pre>",
+  "options": [
+   "A. The secure score percentage",
+   "B. The list of all healthy resources",
+   "C. The total number of unhealthy security assessments",
+   "D. The number of Defender for Cloud alerts"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "The query filters assessments with Unhealthy status and counts them. Alerts live in other resource types, secure score is a different type, and healthy resources are filtered out. See Microsoft Learn: 'Resource Graph sample queries for Defender for Cloud'."
+ },
+ {
+  "id": 37,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "You want to extend Defender for Servers protection to on-premises Windows servers. What is the typical prerequisite?",
+  "options": [
+   "A. Deploy Azure Backup",
+   "B. Enable Defender for Storage",
+   "C. Onboard the servers with Azure Arc",
+   "D. Migrate the servers to Azure"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "Azure Arc projects non-Azure servers into Azure so Defender plans can apply. Migration is not required, and storage or backup plans are unrelated. See Microsoft Learn: 'Connect on-premises machines to Defender for Cloud'."
+ },
+ {
+  "id": 38,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "How do you give Defender for Cloud visibility into an AWS account?",
+  "options": [
+   "A. Create an AWS connector in Environment settings",
+   "B. Deploy Microsoft Sentinel inside AWS",
+   "C. Enable Defender for Storage in AWS",
+   "D. Use Azure Backup for AWS"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Multicloud connectors in Environment settings onboard AWS accounts for posture and protection. Sentinel, Defender for Storage and Azure Backup do not onboard AWS accounts. See Microsoft Learn: 'Connect your AWS account to Defender for Cloud'."
+ },
+ {
+  "id": 39,
+  "domain": "Microsoft Defender for Cloud",
+  "type": "single",
+  "question": "Which plan alerts on unusual attempts to access or exploit Azure Key Vault?",
+  "options": [
+   "A. Defender for Containers",
+   "B. Defender for Resource Manager",
+   "C. Defender for Servers",
+   "D. Defender for Key Vault"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Defender for Key Vault analyzes vault operations for anomalies. The others protect VMs, clusters and management operations. See Microsoft Learn: 'Microsoft Defender for Key Vault'."
+ },
+ {
+  "id": 40,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Microsoft Sentinel stores its collected data in which service?",
+  "options": [
+   "A. Azure Cosmos DB",
+   "B. A Log Analytics workspace",
+   "C. An Azure Storage account only",
+   "D. Azure SQL Database"
+  ],
+  "correctAnswers": [
+   1
+  ],
+  "explanation": "Sentinel is enabled on a Log Analytics workspace and queries its tables with KQL. The other services are not its data store. See Microsoft Learn: 'What is Microsoft Sentinel?'."
+ },
+ {
+  "id": 41,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which table stores Microsoft Entra ID interactive user sign-in logs?\n<pre><code><TableName>\n| where ResultType == 0\n| summarize count() by UserPrincipalName</code></pre>",
+  "options": [
+   "A. CommonSecurityLog",
+   "B. SigninLogs",
+   "C. SecurityEvent",
+   "D. Syslog"
+  ],
+  "correctAnswers": [
+   1
+  ],
+  "explanation": "SigninLogs holds Entra sign-ins. SecurityEvent is Windows security events, Syslog is Linux, and CommonSecurityLog is CEF data. See Microsoft Learn: 'SigninLogs table reference'."
+ },
+ {
+  "id": 42,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which analytics rule type runs a KQL query at an interval that you configure, from every 5 minutes up to every 14 days?",
+  "options": [
+   "A. Scheduled",
+   "B. Microsoft security",
+   "C. Anomaly",
+   "D. Fusion"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Scheduled rules run your query on a frequency. Fusion is built in ML correlation, Microsoft security rules turn alerts from other products into incidents, and anomaly rules are ML templates. See Microsoft Learn: 'Threat detection in Microsoft Sentinel'."
+ },
+ {
+  "id": 43,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "In Microsoft Sentinel, what is an incident?",
+  "options": [
+   "A. A collection of related alerts and evidence to investigate",
+   "B. A row in a watchlist",
+   "C. A single raw log record",
+   "D. A Logic App workflow"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Incidents group alerts, entities and evidence so analysts can triage them. Log records, workflows and watchlist rows are different objects. See Microsoft Learn: 'Investigate incidents in Microsoft Sentinel'."
+ },
+ {
+  "id": 44,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which Microsoft Sentinel feature provides interactive dashboards that visualize your data?",
+  "options": [
+   "A. Playbooks",
+   "B. Automation rules",
+   "C. Watchlists",
+   "D. Workbooks"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Workbooks are Azure Monitor based dashboards. Playbooks automate response, watchlists store reference data, and automation rules handle incidents. See Microsoft Learn: 'Visualize collected data with workbooks'."
+ },
+ {
+  "id": 45,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which Sentinel automation feature is built on Azure Logic Apps?",
+  "options": [
+   "A. Workbooks",
+   "B. Watchlists",
+   "C. Analytics rules",
+   "D. Playbooks"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Playbooks are Logic Apps workflows. The others are dashboards, reference data and detections. See Microsoft Learn: 'Automate threat response with playbooks'."
+ },
+ {
+  "id": 46,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "You want to automatically assign incidents from a specific rule to a team and set their severity. Which feature should you use?",
+  "options": [
+   "A. Bookmarks",
+   "B. Workbooks",
+   "C. Data connectors",
+   "D. Automation rules"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Automation rules apply actions such as assign owner, change severity and run playbooks. Workbooks, bookmarks and connectors do not manage incidents. See Microsoft Learn: 'Automate incident handling with automation rules'."
+ },
+ {
+  "id": 47,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "You want to correlate events with a CSV list of VIP users and high-value servers. Which feature should you use?",
+  "options": [
+   "A. Workbook",
+   "B. Notebook",
+   "C. Bookmark",
+   "D. Watchlist"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Watchlists import reference data to use in queries via _GetWatchlist. Bookmarks save hunting results, workbooks visualize and notebooks run code. See Microsoft Learn: 'Watchlists in Microsoft Sentinel'."
+ },
+ {
+  "id": 48,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "While hunting, you find interesting query results and want to preserve them for later investigation. What should you use?",
+  "options": [
+   "A. Watchlists",
+   "B. Bookmarks",
+   "C. Playbooks",
+   "D. Analytics rules"
+  ],
+  "correctAnswers": [
+   1
+  ],
+  "explanation": "Bookmarks save selected rows, can be linked to incidents and map entities. Watchlists store reference data, playbooks automate, and rules detect. See Microsoft Learn: 'Hunting in Microsoft Sentinel'."
+ },
+ {
+  "id": 49,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Where can you find out-of-the-box solutions that bundle connectors, analytics rules, workbooks and playbooks?",
+  "options": [
+   "A. Azure Advisor",
+   "B. Content hub",
+   "C. Threat analytics",
+   "D. Azure Policy"
+  ],
+  "correctAnswers": [
+   1
+  ],
+  "explanation": "Content hub hosts solutions and standalone content for Sentinel. Advisor, Policy and Threat analytics do not distribute Sentinel content. See Microsoft Learn: 'About Microsoft Sentinel content and solutions'."
+ },
+ {
+  "id": 50,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which Sentinel role lets users view data, incidents and workbooks but make no changes?",
+  "options": [
+   "A. Microsoft Sentinel Reader",
+   "B. Microsoft Sentinel Contributor",
+   "C. Microsoft Sentinel Automation Contributor",
+   "D. Microsoft Sentinel Responder"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Reader is read-only. Responder can manage incidents, Contributor can edit content and Automation Contributor lets Sentinel run playbooks. See Microsoft Learn: 'Roles and permissions in Microsoft Sentinel'."
+ },
+ {
+  "id": 51,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "What does the following query show?\n<pre><code>SecurityEvent\n| where EventID == 4625\n| summarize FailedLogons = count() by Account</code></pre>",
+  "options": [
+   "A. The number of failed logons per account",
+   "B. Successful logons per account",
+   "C. All events for each account",
+   "D. Account lockouts per account"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Event 4625 is a failed logon and summarize counts by Account. Successful logons are 4624 and lockouts 4740. See Microsoft Learn: 'Windows security event 4625'."
+ },
+ {
+  "id": 52,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which sign-ins does the following query return?\n<pre><code>SigninLogs\n| where TimeGenerated > ago(1h)\n| where ResultType != 0</code></pre>",
+  "options": [
+   "A. Only MFA sign-ins",
+   "B. Successful sign-ins from the last hour",
+   "C. Failed sign-ins from the last hour",
+   "D. All sign-ins from the last day"
+  ],
+  "correctAnswers": [
+   2
+  ],
+  "explanation": "ResultType 0 means success, so != 0 selects failures within the last hour. See Microsoft Learn: 'Microsoft Entra sign-in error codes'."
+ },
+ {
+  "id": 53,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "You must keep logs for several years for compliance, rarely queried, at the lowest cost. What should you configure?",
+  "options": [
+   "A. Long-term (archive) retention",
+   "B. A higher commitment tier",
+   "C. Disable the data connector",
+   "D. A daily cap"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Archive retention keeps data cheaply and allows search jobs or restore. A daily cap stops ingestion, a commitment tier changes pricing only, and disabling the connector stops collection. See Microsoft Learn: 'Configure data retention and archive'."
+ },
+ {
+  "id": 54,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which Sentinel capability builds baseline behavior profiles for users and entities to flag anomalies?",
+  "options": [
+   "A. Watchlists",
+   "B. Workbooks",
+   "C. Data connectors",
+   "D. User and entity behavior analytics (UEBA)"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "UEBA profiles behavior and scores anomalies. Watchlists, workbooks and connectors do not build baselines. See Microsoft Learn: 'Identify advanced threats with UEBA'."
+ },
+ {
+  "id": 55,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which feature imports indicators of compromise such as malicious IPs from TAXII servers?",
+  "options": [
+   "A. Threat intelligence connectors",
+   "B. Automation rules",
+   "C. Workbook templates",
+   "D. Playbook templates"
+  ],
+  "correctAnswers": [
+   0
+  ],
+  "explanation": "Threat intelligence connectors import STIX/TAXII indicators. The others do not ingest indicators. See Microsoft Learn: 'Threat intelligence integration in Microsoft Sentinel'."
+ },
+ {
+  "id": 56,
+  "domain": "Microsoft Sentinel",
+  "type": "multiple",
+  "question": "Which two entity types can you map in a Microsoft Sentinel analytics rule? Select two.",
+  "options": [
+   "A. Playbook",
+   "B. Logic App connection",
+   "C. IP address",
+   "D. Account",
+   "E. Workbook"
+  ],
+  "correctAnswers": [
+   2,
+   3
+  ],
+  "explanation": "Entity mapping supports identity types such as Account, Host and IP address. Playbooks, workbooks and connections are not entities. See Microsoft Learn: 'Map data fields to entities in Microsoft Sentinel'."
+ },
+ {
+  "id": 57,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "What does this query show about Sentinel's most recent alerts by name?\n<pre><code>SecurityAlert\n| where AlertSeverity == 'High'\n| summarize Alerts = count() by AlertName</code></pre>",
+  "options": [
+   "A. Alerts of any severity",
+   "B. The list of playbooks that ran",
+   "C. All incidents closed as false positive",
+   "D. The number of high-severity alerts per alert name"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "The query filters to High severity and counts by AlertName. It does not return incidents, all severities or playbook runs. See Microsoft Learn: 'SecurityAlert table reference'."
+ },
+ {
+  "id": 58,
+  "domain": "Microsoft Sentinel",
+  "type": "multiple",
+  "question": "Which two are valid reasons to use more than one Microsoft Sentinel workspace? Select two.",
+  "options": [
+   "A. Analytics rules cannot run in the first workspace",
+   "B. Each data connector requires its own workspace",
+   "C. Separate ownership and access boundaries between business units",
+   "D. An analyst prefers a different dashboard",
+   "E. Data residency requirements in different regions"
+  ],
+  "correctAnswers": [
+   2,
+   4
+  ],
+  "explanation": "Residency and ownership boundaries justify separate workspaces. Connectors, dashboards and rule execution do not require splitting. See Microsoft Learn: 'Design your Microsoft Sentinel workspace architecture'."
+ },
+ {
+  "id": 59,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which table lets you verify that Azure Monitor Agents are reporting? Complete the query:\n<pre><code><TableName>\n| summarize arg_max(TimeGenerated, *) by Computer</code></pre>",
+  "options": [
+   "A. SigninLogs",
+   "B. Heartbeat",
+   "C. Watchlist",
+   "D. SecurityAlert"
+  ],
+  "correctAnswers": [
+   1
+  ],
+  "explanation": "Heartbeat contains periodic agent check-ins, so the latest per computer shows connectivity. The other tables do not record agent health. See Microsoft Learn: 'Heartbeat table reference'."
+ },
+ {
+  "id": 60,
+  "domain": "Microsoft Sentinel",
+  "type": "single",
+  "question": "Which connector ingests logs from the syslog daemon of Linux servers?",
+  "options": [
+   "A. Microsoft Entra ID",
+   "B. Office 365",
+   "C. Azure Activity",
+   "D. Syslog via AMA"
+  ],
+  "correctAnswers": [
+   3
+  ],
+  "explanation": "Syslog via AMA collects Linux syslog through the Azure Monitor Agent. Office 365, Azure Activity and Entra ID collect other sources. See Microsoft Learn: 'Syslog via AMA connector'."
+ }
+]
