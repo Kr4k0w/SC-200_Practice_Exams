@@ -5,6 +5,8 @@ A single-file, zero-dependency practice exam simulator for the **Microsoft SC-20
 Open the HTML file in any modern browser and start practicing. There is no build step, no server and no installation.
 
 > **Disclaimer:** This is an unofficial, community study tool. It is not affiliated with, endorsed by, or sponsored by Microsoft. The questions are original practice material and are **not** real exam questions. Microsoft, Defender, Sentinel, Entra and Azure are trademarks of Microsoft Corporation.
+>
+> **AI disclosure:** The simulator code, the questions, the answer keys and the explanations in this repository were generated with the help of AI (large language models). They have not been verified by Microsoft or by a certified exam author and **may contain errors or outdated information**. Always confirm important details on [Microsoft Learn](https://learn.microsoft.com/) and do not rely on this project as your only study source. Corrections are very welcome (see [Content accuracy](#content-accuracy-and-ai-disclosure)).
 
 ---
 
@@ -20,6 +22,7 @@ Open the HTML file in any modern browser and start practicing. There is no build
 - [Score report and answer review](#score-report-and-answer-review)
 - [Project structure](#project-structure)
 - [Browser support and privacy](#browser-support-and-privacy)
+- [Content accuracy and AI disclosure](#content-accuracy-and-ai-disclosure)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -201,6 +204,17 @@ A suggested repository layout:
 - The simulator runs **entirely in your browser**. It makes no network requests, has no analytics and sends no data anywhere.
 - Exam progress lives only in the open tab and is lost on refresh. Only imported question banks are stored in `localStorage`.
 - The *Copy AI Diagnostic Prompt* button copies text to your clipboard; nothing is transmitted unless you paste it into a tool yourself.
+
+## Content accuracy and AI disclosure
+
+All content in this repository, including the simulator code, the 360 questions, the answer keys and the explanations, was generated with the help of AI tools. Because of that:
+
+- Some questions may have a wrong or debatable answer key, ambiguous wording, or distractors that are partially correct.
+- Microsoft products, feature names, licensing and limits change often. A question that was accurate when written may be outdated today.
+- The explanations in some banks are short and do not cover every distractor.
+- The questions follow the public SC-200 skills outline but are **not** copied from the real exam, and passing this simulator does not guarantee passing the certification.
+
+If you find a mistake, please [open an issue](../../issues) with the exam number, the question `id`, what you believe is wrong, and a link to the relevant Microsoft Learn page. Pull requests with fixes are even better.
 
 ## Contributing
 
